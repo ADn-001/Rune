@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Crypto Website</title>
+</head>
+<body>
+    <div id="welcome-section">
+        <h1>RUNE</h1>
+        <p>Welcome</p>
+        <button onclick="showWalletSection()">Get Started</button>
+    </div>
+
+    <div id="wallet-section" style="display: none;">
+        <h2>Wallet Management</h2>
+        <div>
+            <label for="wallet-input">Enter Wallet Address:</label>
+            <input type="text" id="wallet-input" placeholder="Enter your wallet address">
+            <button id="checkWalletBtn">Check Wallet</button>
+            <button id="createWalletBtn">Create New Wallet</button>
+        </div>
+        <div id="wallet-info" style="margin-top: 20px; font-weight: bold;">
+            <!-- Wallet balance or errors will be displayed here -->
+        </div>
+    </div>
+    <div id="transaction-section" style="display: none;">
+        <h2>Send Coins</h2>
+        <div>
+            <label for="payer-wallet-input">Payer Wallet Address:</label>
+            <input type="text" id="payer-wallet-input" placeholder="Enter payer wallet address">
+        </div>
+        <div>
+            <label for="payee-wallet-input">Payee Wallet Address:</label>
+            <input type="text" id="payee-wallet-input" placeholder="Enter payee wallet address">
+        </div>
+        <div>
+            <label for="amount-input">Amount:</label>
+            <input type="number" id="amount-input" placeholder="Enter amount to send">
+        </div>
+        <button id="sendCoinsBtn">Send Coins</button>
+        <div id="transaction-info" style="margin-top: 20px; font-weight: bold;">
+            <!-- Transaction results or errors will be displayed here -->
+        </div>
+    </div>
+    <div id="mining-section" style="display: none;">
+        <h2>Mining in Progress...</h2>
+        <p>Transaction is being processed. Coins sent successfully!</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
