@@ -1,41 +1,37 @@
 // Wallet Section Functions
 function showWalletSection() {
-    document.getElementById('welcome-section').style.display = 'none';
-    document.getElementById('wallet-section').style.display = 'block';
-    document.getElementById('transaction-section').style.display = 'block'; // Show the transaction section
+    const walletSection = document.getElementById('wallet-section');
+    const transactionSection = document.getElementById('transaction-section');
+    const miningSection = document.getElementById('mining-section');
+
+    walletSection.classList.remove('hidden');
+    walletSection.classList.add('visible');
+    transactionSection.classList.remove('hidden');
+    transactionSection.classList.add('visible');
+    miningSection.classList.remove('hidden');
+    miningSection.classList.add('visible');
+    walletSection.scrollIntoView({ behavior: 'smooth' });
 }
 
-function checkWallet() {
-    const walletAddress = document.getElementById('wallet-input').value;
-
-    fetch('/check_wallet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wallet: walletAddress })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.valid) {
-            document.getElementById('wallet-info').innerHTML = `Wallet Balance: ${data.balance}`;
-        } else {
-            document.getElementById('wallet-info').innerHTML = 'Invalid wallet address!';
-        }
-    });
-}
-
+// Function to create a wallet
 async function createWallet() {
     const response = await fetch("/wallet", { method: "POST" });
     const data = await response.json();
 
     if (response.ok) {
-        alert(`Wallet created successfully! Address: ${data.address}`);
+        const walletOutput = document.getElementById("created-wallet-output");
+        walletOutput.innerHTML = `Wallet created successfully! Address: ${data.address}`;
         document.getElementById("wallet-input").value = data.address;
+
+        // Show success animation for wallet creation
+        showWalletCreatedSuccess();
         showWalletSection();
     } else {
         alert(data.error || "Failed to create wallet");
     }
 }
 
+// Function to check wallet balance
 async function getWalletBalance() {
     const walletAddress = document.getElementById('wallet-input').value;
 
@@ -54,6 +50,7 @@ async function getWalletBalance() {
     }
 }
 
+// Function to send coins
 async function sendCoins() {
     const payerAddress = document.getElementById('payer-wallet-input').value;
     const payeeAddress = document.getElementById('payee-wallet-input').value;
@@ -74,17 +71,68 @@ async function sendCoins() {
         const data = await response.json();
 
         if (response.ok) {
-            alert("Transaction successful: " + data.message);
+            // Show transaction success animation
+            showTransactionSuccess();
+
+            // Update wallet balance
             getWalletBalance();
         } else {
-            alert("Transaction failed: " + (data.error || "Unknown error"));
+            document.getElementById("transaction-info").innerHTML =
+                `Transaction failed: ${data.error || "Unknown error"}`;
         }
     } catch (error) {
-        alert("An error occurred: " + error.message);
+        document.getElementById("transaction-info").innerHTML =
+            `An error occurred: ${error.message}`;
     }
 }
 
-// ALEX WORK: Scroll and Navigation
+// Function to show wallet creation success message with animation
+function showWalletCreatedSuccess() {
+    const successMessage = document.createElement('div');
+    successMessage.classList.add('success-message');
+    successMessage.innerHTML = "Wallet Created Successfully!";
+    
+    const walletSection = document.getElementById('wallet-section');
+    walletSection.appendChild(successMessage);
+
+    // Add animation for success message
+    setTimeout(() => {
+        successMessage.classList.add('success-message-visible');
+    }, 100);
+
+    // Remove message after animation
+    setTimeout(() => {
+        successMessage.classList.remove('success-message-visible');
+        setTimeout(() => {
+            successMessage.remove();
+        }, 300); // Wait for animation to finish before removing
+    }, 3000);
+}
+
+// Function to show transaction success message with animation
+function showTransactionSuccess() {
+    const successMessage = document.createElement('div');
+    successMessage.classList.add('success-message');
+    successMessage.innerHTML = "Transaction Successful!";
+    
+    const transactionSection = document.getElementById('transaction-section');
+    transactionSection.appendChild(successMessage);
+
+    // Add animation for success message
+    setTimeout(() => {
+        successMessage.classList.add('success-message-visible');
+    }, 100);
+
+    // Remove message after animation
+    setTimeout(() => {
+        successMessage.classList.remove('success-message-visible');
+        setTimeout(() => {
+            successMessage.remove();
+        }, 300); // Wait for animation to finish before removing
+    }, 3000);
+}
+
+// Scroll and navigation for sections
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('.navbar a');

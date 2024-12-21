@@ -1,18 +1,130 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-/* Header styling */
-header {
-    background-color: #342a28; /* Use the color from website_alex */
+/* Success Messages */
+.success-message {
+    font-size: 1.5rem;
+    padding: 20px;
+    border-radius: 10px;
     color: white;
-    padding: 10em 10; /* Retain padding from website_alex */
+    background: linear-gradient(90deg, #4caf50, #81c784); /* Green Gradient */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    animation: slideIn 0.8s ease-out forwards;
+    display: flex;
+    align-items: center;
 }
 
-/* Alex's Navbar Styling */
+.success-message i {
+    font-size: 2rem;
+    margin-right: 15px;
+}
+
+.success-message-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Keyframe Animations */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Section Styling */
+.section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+}
+
+.section.visible {
+    opacity: 1;
+}
+
+/* Hidden Elements */
+.hidden {
+    display: none;
+}
+
+/* Typography */
+h1 {
+    font-size: 3rem;
+    color: #ff6f61;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #ff6f61, #ff8e53);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #ff6f61, #ff8e53);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Buttons */
+button {
+    padding: 12px 25px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #4b79a1, #283e61);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #283e61, #4b79a1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Input Fields */
+input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #576993;
+    border-radius: 8px;
+    width: 320px;
+    margin-top: 12px;
+    outline: none;
+    transition: box-shadow 0.3s, border-color 0.3s ease-in-out;
+}
+
+input:focus {
+    border-color: #ff6f61;
+    box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
+}
+
+/* Navigation Bar */
 nav {
     background-color: #342a28;
     color: white;
@@ -25,9 +137,9 @@ nav {
 .navbar {
     display: flex;
     justify-content: space-around;
-    padding-top: 1.5em; /* Add top padding */
-    max-width: 50%; /* Adjust this value as needed */
-    margin: 0 auto; /* Center the navbar horizontally */
+    padding-top: 1.5em;
+    max-width: 50%;
+    margin: 0 auto;
 }
 
 .navbar a {
@@ -41,41 +153,13 @@ nav {
     color: orange;
 }
 
-.logo-text {
-    padding: 0em;
-}
-
-html {
+/* General Body Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #141e30, #243b55);
+    color: white;
     scroll-behavior: smooth;
-}
-
-/* Section styling for better visuals */
-section {
-    min-height: 100vh; /* Full viewport height */
-    padding: 2em; /* Space inside each section */
-    margin: 2em 0; /* Space outside each section */
-    border: 1px solid #ddd; /* Optional border for visual separation */
-    border-radius: 8px; /* Rounded corners */
-}
-
-/* Add extra space below sections for better visibility */
-#wallet-section, #transaction-section, #mining-section {
-    position: relative;
-}
-
-/* Input and button styling */
-input, button {
-    margin: 0.5em 0;
-    padding: 0.5em;
-    font-size: 1em;
-}
-
-/* Extra spacing for elements */
-.spacer {
-    margin: 0 1em; /* Adjust the margin value as needed */
-}
-
-/* Main content area styling */
-main {
-    padding: 2em;
 }
