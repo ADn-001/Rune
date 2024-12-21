@@ -7,15 +7,15 @@
     <title>Crypto Website</title>
 </head>
 <body>
-    <!--ALEX WORK-->
+    <!-- Navbar -->
     <nav>
         <div class="navbar">
             <h1 class="logo-text">RUNE</h1>
             <div class="navbar-links">
                 <a href="#welcome-section">Home</a>
-                <span class="spacer"></span>  <a href="#wallet-section">Wallet</a>
-                <span class="spacer"></span>  <a href="#transaction-section">Send Coins</a>
-                <span class="spacer"></span>  <a href="#mining-section">Mining</a>
+                <span class="spacer"></span><a href="#wallet-section">Wallet</a>
+                <span class="spacer"></span><a href="#transaction-section">Send Coins</a>
+                <span class="spacer"></span><a href="#mining-section">Mining</a>
             </div>
         </div>
     </nav>
@@ -28,7 +28,7 @@
     </section>
 
     <!-- Wallet Management Section -->
-    <section id="wallet-section">
+    <section id="wallet-section" style="display: none;">
         <h2>Wallet Management</h2>
         <div>
             <label for="wallet-input">Enter Wallet Address:</label>
@@ -36,10 +36,13 @@
             <button id="checkWalletBtn">Check Wallet</button>
             <button id="createWalletBtn">Create New Wallet</button>
         </div>
+        <div id="wallet-info" style="margin-top: 20px; font-weight: bold;">
+            <!-- Wallet balance or errors will be displayed here -->
+        </div>
     </section>
 
     <!-- Send Coins Section -->
-    <section id="transaction-section">
+    <section id="transaction-section" style="display: none;">
         <h2>Send Coins</h2>
         <div>
             <label for="payer-wallet-input">Payer Wallet Address:</label>
@@ -54,10 +57,13 @@
             <input type="number" id="amount-input" placeholder="Enter amount to send">
         </div>
         <button id="sendCoinsBtn">Send Coins</button>
+        <div id="transaction-info" style="margin-top: 20px; font-weight: bold;">
+            <!-- Transaction results or errors will be displayed here -->
+        </div>
     </section>
 
     <!-- Mining Section -->
-    <section id="mining-section">
+    <section id="mining-section" style="display: none;">
         <h2>Mining in Progress...</h2>
         <p>Transaction is being processed. Coins sent successfully!</p>
     </section>
