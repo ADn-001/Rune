@@ -1,43 +1,35 @@
+// Original function: Show wallet section
 function showWalletSection() {
-    document.getElementById('welcome-section').style.display = 'none';
-    document.getElementById('wallet-section').style.display = 'block';
-    document.getElementById('transaction-section').style.display = 'block'; // Show the transaction section
+    document.getElementById('wallet-section').classList.remove('hidden');
+    document.getElementById('wallet-section').classList.add('visible');
+    document.getElementById('transaction-section').classList.remove('hidden');
+    document.getElementById('transaction-section').classList.add('visible');
+    document.getElementById('mining-section').classList.remove('hidden');
+    document.getElementById('mining-section').classList.add('visible');
+    document.getElementById('wallet-section').scrollIntoView({ behavior: 'smooth' });
 }
 
-function checkWallet() {
-    const walletAddress = document.getElementById('wallet-input').value;
-
-    fetch('/check_wallet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wallet: walletAddress })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.valid) {
-            document.getElementById('wallet-info').innerHTML = `Wallet Balance: ${data.balance}`;
-        } else {
-            document.getElementById('wallet-info').innerHTML = 'Invalid wallet address!';
-        }
-    });
-}
-
+// Original function: Create a wallet
 async function createWallet() {
-    // Call the API to create a new wallet
     const response = await fetch("/wallet", { method: "POST" });
     const data = await response.json();
 
     if (response.ok) {
-        alert(`Wallet created successfully! Address: ${data.address}`);
+        const walletOutput = document.getElementById("created-wallet-output");
+        walletOutput.innerHTML = `Wallet created successfully! Address: ${data.address}`;
         document.getElementById("wallet-input").value = data.address;
+
+        // Show success animation for wallet creation
+        showWalletCreatedSuccess();
+        
         showWalletSection();
     } else {
         alert(data.error || "Failed to create wallet");
     }
 }
 
+// Original function: Check wallet balance
 async function getWalletBalance() {
-    // Get wallet address from input
     const walletAddress = document.getElementById('wallet-input').value;
 
     if (!walletAddress) {
@@ -45,7 +37,6 @@ async function getWalletBalance() {
         return;
     }
 
-    // Fetch wallet info
     const response = await fetch(`/wallet/${walletAddress}`);
     const data = await response.json();
 
@@ -56,19 +47,17 @@ async function getWalletBalance() {
     }
 }
 
+// Original function: Send coins
 async function sendCoins() {
-    // Retrieve user input for the transaction
     const payerAddress = document.getElementById('payer-wallet-input').value;
     const payeeAddress = document.getElementById('payee-wallet-input').value;
     const amount = parseFloat(document.getElementById('amount-input').value);
 
-    // Basic validation
     if (!payerAddress || !payeeAddress || isNaN(amount) || amount <= 0) {
         alert("Please fill in valid payer, payee, and amount fields.");
         return;
     }
 
-    // Send the transaction to the backend
     try {
         const response = await fetch('/transaction', {
             method: 'POST',
@@ -79,19 +68,84 @@ async function sendCoins() {
         const data = await response.json();
 
         if (response.ok) {
-            alert("Transaction successful: " + data.message);
-            // Optionally refresh balance or wallet info after transaction
+            // Show transaction success animation
+            showTransactionSuccess();
+
+            // Optionally update the wallet balance after sending coins
             getWalletBalance();
         } else {
-            alert("Transaction failed: " + (data.error || "Unknown error"));
+            document.getElementById("transaction-info").innerHTML =
+                `Transaction failed: ${data.error || "Unknown error"}`;
         }
     } catch (error) {
-        alert("An error occurred: " + error.message);
+        document.getElementById("transaction-info").innerHTML =
+            `An error occurred: ${error.message}`;
     }
 }
 
-// Event listener for the "Send Coins" button
+// Function to show wallet creation success message with animation
+function showWalletCreatedSuccess() {
+    const successMessage = document.createElement('div');
+    successMessage.classList.add('success-message');
+    successMessage.innerHTML = "Wallet Created Successfully!";
+    
+    const walletSection = document.getElementById('wallet-section');
+    walletSection.appendChild(successMessage);
+
+    // Add animation for success message
+    setTimeout(() => {
+        successMessage.classList.add('success-message-visible');
+    }, 100);
+
+    // Remove message after animation
+    setTimeout(() => {
+        successMessage.classList.remove('success-message-visible');
+        setTimeout(() => {
+            successMessage.remove();
+        }, 300); // Wait for animation to finish before removing
+    }, 3000);
+}
+
+// Function to show transaction success message with animation
+function showTransactionSuccess() {
+    const successMessage = document.createElement('div');
+    successMessage.classList.add('success-message');
+    successMessage.innerHTML = "Transaction Successful!";
+    
+    const transactionSection = document.getElementById('transaction-section');
+    transactionSection.appendChild(successMessage);
+
+    // Add animation for success message
+    setTimeout(() => {
+        successMessage.classList.add('success-message-visible');
+    }, 100);
+
+    // Remove message after animation
+    setTimeout(() => {
+        successMessage.classList.remove('success-message-visible');
+        setTimeout(() => {
+            successMessage.remove();
+        }, 300); // Wait for animation to finish before removing
+    }, 3000);
+}
+
+// Event listeners for buttons
 document.getElementById("sendCoinsBtn").addEventListener("click", sendCoins);
-// Event listeners for button actions
 document.getElementById("createWalletBtn").addEventListener("click", createWallet);
 document.getElementById("checkWalletBtn").addEventListener("click", getWalletBalance);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

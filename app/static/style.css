@@ -1,30 +1,178 @@
+/* Success Messages */
+.success-message {
+    font-size: 1.5rem;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    background: linear-gradient(90deg, #4caf50, #81c784); /* Green Gradient */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    animation: slideIn 0.8s ease-out forwards;
+    display: flex;
+    align-items: center;
+}
+
+.success-message i {
+    font-size: 2rem;
+    margin-right: 15px;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.transaction-success, .wallet-success {
+    display: none;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Existing Styles (no changes) */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
-}
-
-header {
-    background-color: #282c34;
+    background: linear-gradient(to bottom, #141e30, #243b55);
     color: white;
-    padding: 1em 0;
+    scroll-behavior: smooth;
 }
 
-main {
-    padding: 2em;
+.section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
 }
 
-section {
-    margin: 1em auto;
-    max-width: 500px;
-    padding: 1em;
-    border: 1px solid #ddd;
+.section.visible {
+    opacity: 1;
+}
+
+.hidden {
+    display: none;
+}
+
+h1 {
+    font-size: 3rem;
+    color: #ff6f61;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #ff6f61, #ff8e53);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #ff6f61, #ff8e53);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+button {
+    padding: 12px 25px; /* Slightly bigger button */
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #4b79a1, #283e61); /* Softer gradient */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #283e61, #4b79a1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #576993;
+    border-radius: 8px; /* Rounded corners */
+    width: 320px;
+    margin-top: 12px;
+    outline: none;
+    transition: box-shadow 0.3s, border-color 0.3s ease-in-out;
+}
+
+input:focus {
+    border-color: #ff6f61;
+    box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
+}
+
+#wallet-info,
+#transaction-info {
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+#transaction-success {
+    color: green;
+}
+
+.logo-container {
+    margin: 30px auto;
+}
+
+.svg-logo {
+    width: 250px;
+    height: auto;
+    margin-bottom: 40px;
+}
+/* Success message animation styles */
+.success-message {
+    background-color: #28a745;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
     border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-input, button {
-    margin: 0.5em 0;
-    padding: 0.5em;
-    font-size: 1em;
+.success-message-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
+
+
+
+
+
+
+
+
+
+
