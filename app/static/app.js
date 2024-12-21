@@ -90,6 +90,39 @@ async function sendCoins() {
     }
 }
 
+//ALEX WORK
+window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.navbar a');
+
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.querySelector(`.navbar a[href="#${section.id}"]`).classList.add('active');
+        }
+    });
+});
+
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+        section.style.display = 'block'; // Ensure the section is visible
+        section.scrollIntoView({ behavior: 'smooth' }); // Scroll to the section smoothly
+    }
+}
+
+// Optional: Add scroll functionality to navbar links
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const targetId = link.getAttribute('href').substring(1); // Remove '#' from href
+        scrollToSection(targetId);
+    });
+});
+
+
 // Event listener for the "Send Coins" button
 document.getElementById("sendCoinsBtn").addEventListener("click", sendCoins);
 // Event listeners for button actions
