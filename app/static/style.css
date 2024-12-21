@@ -5,26 +5,77 @@ body {
     text-align: center;
 }
 
+/* Header styling */
 header {
-    background-color: #282c34;
+    background-color: #342a28; /* Use the color from website_alex */
     color: white;
-    padding: 1em 0;
+    padding: 10em 10; /* Retain padding from website_alex */
 }
 
-main {
-    padding: 2em;
+/* Alex's Navbar Styling */
+nav {
+    background-color: #342a28;
+    color: white;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 1.5em; /* Add top padding */
+    max-width: 50%; /* Adjust this value as needed */
+    margin: 0 auto; /* Center the navbar horizontally */
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: orange;
+}
+
+.logo-text {
+    padding: 0em;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Section styling for better visuals */
 section {
-    margin: 1em auto;
-    max-width: 500px;
-    padding: 1em;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    min-height: 100vh; /* Full viewport height */
+    padding: 2em; /* Space inside each section */
+    margin: 2em 0; /* Space outside each section */
+    border: 1px solid #ddd; /* Optional border for visual separation */
+    border-radius: 8px; /* Rounded corners */
 }
 
+/* Add extra space below sections for better visibility */
+#wallet-section, #transaction-section, #mining-section {
+    position: relative;
+}
+
+/* Input and button styling */
 input, button {
     margin: 0.5em 0;
     padding: 0.5em;
     font-size: 1em;
+}
+
+/* Extra spacing for elements */
+.spacer {
+    margin: 0 1em; /* Adjust the margin value as needed */
+}
+
+/* Main content area styling */
+main {
+    padding: 2em;
 }

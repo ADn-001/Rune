@@ -7,13 +7,28 @@
     <title>Crypto Website</title>
 </head>
 <body>
-    <div id="welcome-section">
+    <!-- Navbar -->
+    <nav>
+        <div class="navbar">
+            <h1 class="logo-text">RUNE</h1>
+            <div class="navbar-links">
+                <a href="#welcome-section">Home</a>
+                <span class="spacer"></span><a href="#wallet-section">Wallet</a>
+                <span class="spacer"></span><a href="#transaction-section">Send Coins</a>
+                <span class="spacer"></span><a href="#mining-section">Mining</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="welcome-section">
         <h1>RUNE</h1>
         <p>Welcome</p>
-        <button onclick="showWalletSection()">Get Started</button>
-    </div>
+        <button onclick="scrollToSection('wallet-section')">Get Started</button>
+    </section>
 
-    <div id="wallet-section" style="display: none;">
+    <!-- Wallet Management Section -->
+    <section id="wallet-section" style="display: none;">
         <h2>Wallet Management</h2>
         <div>
             <label for="wallet-input">Enter Wallet Address:</label>
@@ -24,8 +39,10 @@
         <div id="wallet-info" style="margin-top: 20px; font-weight: bold;">
             <!-- Wallet balance or errors will be displayed here -->
         </div>
-    </div>
-    <div id="transaction-section" style="display: none;">
+    </section>
+
+    <!-- Send Coins Section -->
+    <section id="transaction-section" style="display: none;">
         <h2>Send Coins</h2>
         <div>
             <label for="payer-wallet-input">Payer Wallet Address:</label>
@@ -43,11 +60,13 @@
         <div id="transaction-info" style="margin-top: 20px; font-weight: bold;">
             <!-- Transaction results or errors will be displayed here -->
         </div>
-    </div>
-    <div id="mining-section" style="display: none;">
+    </section>
+
+    <!-- Mining Section -->
+    <section id="mining-section" style="display: none;">
         <h2>Mining in Progress...</h2>
         <p>Transaction is being processed. Coins sent successfully!</p>
-    </div>
+    </section>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
