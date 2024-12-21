@@ -17,6 +17,12 @@
     margin-right: 15px;
 }
 
+.success-message-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Keyframe Animations */
 @keyframes slideIn {
     0% {
         opacity: 0;
@@ -28,11 +34,6 @@
     }
 }
 
-.transaction-success, .wallet-success {
-    display: none;
-    animation: fadeIn 1s ease-out forwards;
-}
-
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -42,17 +43,7 @@
     }
 }
 
-/* Existing Styles (no changes) */
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background: linear-gradient(to bottom, #141e30, #243b55);
-    color: white;
-    scroll-behavior: smooth;
-}
-
+/* Section Styling */
 .section {
     min-height: 100vh;
     display: flex;
@@ -67,10 +58,12 @@ body {
     opacity: 1;
 }
 
+/* Hidden Elements */
 .hidden {
     display: none;
 }
 
+/* Typography */
 h1 {
     font-size: 3rem;
     color: #ff6f61;
@@ -89,15 +82,16 @@ h2 {
     color: transparent;
 }
 
+/* Buttons */
 button {
-    padding: 12px 25px; /* Slightly bigger button */
+    padding: 12px 25px;
     font-size: 18px;
     margin-top: 20px;
     cursor: pointer;
-    background: linear-gradient(90deg, #4b79a1, #283e61); /* Softer gradient */
+    background: linear-gradient(90deg, #4b79a1, #283e61);
     color: white;
     border: none;
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
@@ -113,11 +107,12 @@ button:active {
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Input Fields */
 input {
     padding: 12px;
     font-size: 16px;
     border: 1px solid #576993;
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 8px;
     width: 320px;
     margin-top: 12px;
     outline: none;
@@ -129,50 +124,42 @@ input:focus {
     box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
 }
 
-#wallet-info,
-#transaction-info {
-    font-weight: bold;
-    margin-top: 20px;
-}
-
-#transaction-success {
-    color: green;
-}
-
-.logo-container {
-    margin: 30px auto;
-}
-
-.svg-logo {
-    width: 250px;
-    height: auto;
-    margin-bottom: 40px;
-}
-/* Success message animation styles */
-.success-message {
-    background-color: #28a745;
+/* Navigation Bar */
+nav {
+    background-color: #342a28;
     color: white;
-    font-size: 18px;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 20px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 1.5em;
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: orange;
+}
+
+/* General Body Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
     text-align: center;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    background: linear-gradient(to bottom, #141e30, #243b55);
+    color: white;
+    scroll-behavior: smooth;
 }
-
-.success-message-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-
-
-
-
-
-
-
-
