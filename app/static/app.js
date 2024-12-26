@@ -1,37 +1,43 @@
-// Original function: Show wallet section
 function showWalletSection() {
-    document.getElementById('wallet-section').classList.remove('hidden');
-    document.getElementById('wallet-section').classList.add('visible');
-    document.getElementById('transaction-section').classList.remove('hidden');
-    document.getElementById('transaction-section').classList.add('visible');
-    document.getElementById('mining-section').classList.remove('hidden');
-    document.getElementById('mining-section').classList.add('visible');
-    document.getElementById('wallet-section').scrollIntoView({ behavior: 'smooth' });
-    const navbar = document.getElementById('navbar');
-    navbar.style.display = flex;
+    document.getElementById('welcome-section').style.display = 'none';
+    document.getElementById('wallet-section').style.display = 'block';
+    document.getElementById('transaction-section').style.display = 'block'; // Show the transaction section
 }
 
-// Original function: Create a wallet
+function checkWallet() {
+    const walletAddress = document.getElementById('wallet-input').value;
+
+    fetch('/check_wallet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wallet: walletAddress })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.valid) {
+            document.getElementById('wallet-info').innerHTML = `Wallet Balance: ${data.balance}`;
+        } else {
+            document.getElementById('wallet-info').innerHTML = 'Invalid wallet address!';
+        }
+    });
+}
+
 async function createWallet() {
+    // Call the API to create a new wallet
     const response = await fetch("/wallet", { method: "POST" });
     const data = await response.json();
 
     if (response.ok) {
-        const walletOutput = document.getElementById("created-wallet-output");
-        walletOutput.innerHTML = `Wallet created successfully! Address: ${data.address}`;
+        alert(`Wallet created successfully! Address: ${data.address}`);
         document.getElementById("wallet-input").value = data.address;
-
-        // Show success animation for wallet creation
-        showWalletCreatedSuccess();
-        
         showWalletSection();
     } else {
         alert(data.error || "Failed to create wallet");
     }
 }
 
-// Original function: Check wallet balance
 async function getWalletBalance() {
+    // Get wallet address from input
     const walletAddress = document.getElementById('wallet-input').value;
 
     if (!walletAddress) {
@@ -39,6 +45,7 @@ async function getWalletBalance() {
         return;
     }
 
+    // Fetch wallet info
     const response = await fetch(`/wallet/${walletAddress}`);
     const data = await response.json();
 
@@ -49,16 +56,19 @@ async function getWalletBalance() {
     }
 }
 
-// Original function: Send coins
 async function sendCoins() {
+    // Retrieve user input for the transaction
     const payerAddress = document.getElementById('payer-wallet-input').value;
     const payeeAddress = document.getElementById('payee-wallet-input').value;
     const amount = parseFloat(document.getElementById('amount-input').value);
+
+    // Basic validation
     if (!payerAddress || !payeeAddress || isNaN(amount) || amount <= 0) {
         alert("Please fill in valid payer, payee, and amount fields.");
         return;
     }
 
+    // Send the transaction to the backend
     try {
         const response = await fetch('/transaction', {
             method: 'POST',
@@ -69,103 +79,52 @@ async function sendCoins() {
         const data = await response.json();
 
         if (response.ok) {
-            
-            // Show transaction success animation
-            showTransactionSuccess();
-            // Optionally update the wallet balance after sending coins
+            alert("Transaction successful: " + data.message);
+            // Optionally refresh balance or wallet info after transaction
             getWalletBalance();
         } else {
-            document.getElementById("transaction-info").innerHTML =
-                `Transaction failed: ${data.error || "Unknown error"}`;
-
+            alert("Transaction failed: " + (data.error || "Unknown error"));
         }
     } catch (error) {
-        document.getElementById("transaction-info").innerHTML =
-            `An error occurred: ${error.message}`;
+        alert("An error occurred: " + error.message);
     }
 }
 
-// Function to show wallet creation success message with animation
-function showWalletCreatedSuccess() {
-    const successMessage = document.createElement('div');
-    successMessage.classList.add('success-message');
-    successMessage.innerHTML = "Wallet Created Successfully!";
-    
-    const walletSection = document.getElementById('wallet-section');
-    walletSection.appendChild(successMessage);
+//ALEX WORK
+window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.navbar a');
 
-    // Add animation for success message
-    setTimeout(() => {
-        successMessage.classList.add('success-message-visible');
-    }, 100);
-
-    // Remove message after animation
-    setTimeout(() => {
-        successMessage.classList.remove('success-message-visible');
-        setTimeout(() => {
-            successMessage.remove();
-        }, 300); // Wait for animation to finish before removing
-    }, 3000);
-}
-
-// Function to show transaction success message with animation
-function showTransactionSuccess() {
-    const successMessage = document.createElement('div');
-    successMessage.classList.add('success-message');
-    successMessage.innerHTML = "Transaction Successful!";
-    
-    const transactionSection = document.getElementById('transaction-section');
-    transactionSection.appendChild(successMessage);
-
-    // Add animation for success message
-    setTimeout(() => {
-        successMessage.classList.add('success-message-visible');
-    }, 100);
-
-    // Remove message after animation
-    setTimeout(() => {
-        successMessage.classList.remove('success-message-visible');
-        setTimeout(() => {
-            successMessage.remove();
-        }, 300); // Wait for animation to finish before removing
-    }, 3000);
-}
-
-// Event listeners for buttons
-document.getElementById("sendCoinsBtn").addEventListener("click", sendCoins);
-document.getElementById("createWalletBtn").addEventListener("click", createWallet);
-document.getElementById("checkWalletBtn").addEventListener("click", getWalletBalance);
-document.querySelectorAll('.navbar a').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetSection = document.querySelector(this.getAttribute('href'));
-        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.querySelector(`.navbar a[href="#${section.id}"]`).classList.add('active');
+        }
     });
 });
-const navbar = document.getElementById('navbar');
-  const walletSection = document.getElementById("wallet-section");
-  window.addEventListener('scroll', () => {
-    const walletSectionTop = walletSection.offsetTop;
 
-    if (window.scrollY >= walletSectionTop+100) {
-      navbar.style.display = 'flex'; // Show the navbar
-    } else {
-      navbar.style.display = 'none'; // Hide the navbar
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+        section.style.display = 'block'; // Ensure the section is visible
+        section.scrollIntoView({ behavior: 'smooth' }); // Scroll to the section smoothly
     }
-  });
-// Hide the navbar initially
-navbar.style.display = 'none';
+}
+
+// Optional: Add scroll functionality to navbar links
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const targetId = link.getAttribute('href').substring(1); // Remove '#' from href
+        scrollToSection(targetId);
+    });
+});
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+// Event listener for the "Send Coins" button
+document.getElementById("sendCoinsBtn").addEventListener("click", sendCoins);
+// Event listeners for button actions
+document.getElementById("createWalletBtn").addEventListener("click", createWallet);
+document.getElementById("checkWalletBtn").addEventListener("click", getWalletBalance);
