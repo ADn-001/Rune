@@ -1,125 +1,216 @@
+/* Success Messages */
+.success-message {
+    font-size: 1.5rem;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    background: linear-gradient(90deg, #4caf50, #81c784); /* Green Gradient */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    animation: slideIn 0.8s ease-out forwards;
+    display: flex;
+    align-items: center;
+}
+
+.success-message i {
+    font-size: 2rem;
+    margin-right: 15px;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.transaction-success, .wallet-success {
+    display: none;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Existing Styles (no changes) */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
-}
-
-header {
-    background-color: #342a28;
+    background: linear-gradient(to bottom, #141e30, #243b55);
     color: white;
-    padding: 10em 10;
-}
-
-h1 {
-    background-color: orange;
-    margin-top: -10px;
-} 
-
-/*ALEX WORK*/
-
-nav {
-    background-color: #342a28;
-    color: white;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-around;
-    padding: auto;
-    padding-top: 1.5em; /* Add top padding */ 
-    max-width: 50%; /* Adjust this value as needed */
-    margin: 0 auto; /* Center the navbar horizontally */
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.2em;
-    transition: color 0.3s;
-}
-
-.navbar a:hover {
-    color: orange;
-}
-
-.logo-text {
-    padding: 0em; 
-}
-
-html {
     scroll-behavior: smooth;
 }
 
-/* Optional: Section styling for better visuals */
-section {
-    min-height: 100vh; /* Full viewport height */
-    padding: 2em;
-    border-bottom: 1px solid #ddd; /* Separate sections visually */
+.section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
 }
 
-html {
-    scroll-behavior: smooth; /* Enable smooth scrolling */
+.section.visible {
+    opacity: 1;
 }
+
+.hidden {
+    display: none;
+}
+
+h1 {
+    font-size: 3rem;
+    color: #ff6f61;
+    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #ff6f61, #ff8e53);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #ff6f61, #ff8e53);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+button {
+    padding: 12px 25px; /* Slightly bigger button */
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #4b79a1, #283e61); /* Softer gradient */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #283e61, #4b79a1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #576993;
+    border-radius: 8px; /* Rounded corners */
+    width: 320px;
+    margin-top: 12px;
+    outline: none;
+    transition: box-shadow 0.3s, border-color 0.3s ease-in-out;
+}
+
+input:focus {
+    border-color: #ff6f61;
+    box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
+}
+
+#wallet-info,
+#transaction-info {
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+#transaction-success {
+    color: green;
+}
+
+.logo-container {
+    margin: 30px auto;
+}
+
+.svg-logo {
+    width: 250px;
+    height: auto;
+    margin-bottom: 40px;
+}
+/* Success message animation styles */
+.success-message {
+    background-color: #28a745;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.success-message-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #333; /* Dark background */
+    padding-top: 10px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: none; /* Use flexbox on navbar to control layout */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+nav {
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex; /* Keep flex to arrange items in a row */
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.navbar ul li {
+    margin-top: 10px;
+    margin-bottom: 0;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.navbar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.3s ease;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.navbar ul li a:hover {
+    color: #ffcc00; 
+}
+
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-/* Header styling */
-header {
-    background-color: #342a28;
-    color: white;
-    padding: 10em 10; /* Adjust as needed */
-}
-
-/* Style for each section */
-section {
-    min-height: 100vh; /* Full viewport height for visibility */
-    padding: 2em; /* Space inside each section */
-    margin: 2em 0; /* Space outside each section */
-    border: 1px solid #ddd; /* Optional border for visual separation */
-    border-radius: 8px; /* Rounded corners */
-}
-
-/* Add extra space below sections for better visibility */
-#wallet-section, #transaction-section, #mining-section {
-        position: relative;
-
-}
-
-input, button {
-    margin: 0.5em 0;
-    padding: 0.5em;
-    font-size: 1em;
-}
-
-.spacer {
-    margin: 0 1em;  /* Adjust the margin value as needed */
-}
-
-
-main {
-    padding: 2em;
-}
-
-section {
-    margin: 1em auto;
-    max-width: 500px;
-    padding: 1em;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-input, button {
-    margin: 0.5em 0;
-    padding: 0.5em;
-    font-size: 1em;
+    padding-top: 60px; /* To prevent content overlap with navbar */
 }
