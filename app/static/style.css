@@ -166,6 +166,54 @@ input:focus {
     opacity: 1;
     transform: translateY(0);
 }
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #333; /* Dark background */
+    padding-top: 10px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: none; /* Use flexbox on navbar to control layout */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+nav {
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex; /* Keep flex to arrange items in a row */
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.navbar ul li {
+    margin-top: 10px;
+    margin-bottom: 0;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.navbar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.3s ease;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.navbar ul li a:hover {
+    color: #ffcc00; 
+}
+
+
+body {
+    padding-top: 60px; /* To prevent content overlap with navbar */
+}
 
 
 

@@ -1,6 +1,6 @@
 {
     "s4ezo8Bo9m6MbHlVpP6plUP2VeE=": {
-        "balance": 0,
+        "balance": 10.0,
         "private_key": "1e0b0b60e248349b6356f5fed5b0a2f9f6f290942a4191e4e8d6867e9b2af67c"
     },
     "19ZhEKErfNxkJZTGqgBLGrOHjS8=": {
@@ -214,5 +214,13 @@
     "pC2JZCYMdwLdPb3v5op6exrYcEE=": {
         "balance": 100,
         "private_key": "7932b0f3887ab01cbd0a829ff85186c0cde19d728389aafa18836c2204b2978c"
+    },
+    "vtU+6UwdpbXiiAlZI8u/cUvJyBc=": {
+        "balance": 110.0,
+        "private_key": "cf3d65ea1e10cd9d8af890996e394557805fbf4e5426ae83bf088c6ebd6a9b62"
+    },
+    "obD7+v5AjwSzbcPEcK9tjl8tMrI=": {
+        "balance": 80.0,
+        "private_key": "79ed01e8dd658a8ccc02a16d13fbcb470271ac3165e019f0303c52aa15bdd7af"
     }
 }
