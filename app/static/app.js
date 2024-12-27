@@ -8,7 +8,7 @@ function showWalletSection() {
     document.getElementById('mining-section').classList.add('visible');
     document.getElementById('wallet-section').scrollIntoView({ behavior: 'smooth' });
     const navbar = document.getElementById('navbar');
-    navbar.style.display = flex;
+    navbar.style.display = 'flex';
 }
 
 // Original function: Create a wallet
@@ -23,7 +23,6 @@ async function createWallet() {
 
         // Show success animation for wallet creation
         showWalletCreatedSuccess();
-        
         showWalletSection();
     } else {
         alert(data.error || "Failed to create wallet");
@@ -69,7 +68,6 @@ async function sendCoins() {
         const data = await response.json();
 
         if (response.ok) {
-            
             // Show transaction success animation
             showTransactionSuccess();
             // Optionally update the wallet balance after sending coins
@@ -77,7 +75,6 @@ async function sendCoins() {
         } else {
             document.getElementById("transaction-info").innerHTML =
                 `Transaction failed: ${data.error || "Unknown error"}`;
-
         }
     } catch (error) {
         document.getElementById("transaction-info").innerHTML =
@@ -87,47 +84,37 @@ async function sendCoins() {
 
 // Function to show wallet creation success message with animation
 function showWalletCreatedSuccess() {
-    const successMessage = document.createElement('div');
-    successMessage.classList.add('success-message');
-    successMessage.innerHTML = "Wallet Created Successfully!";
-    
-    const walletSection = document.getElementById('wallet-section');
-    walletSection.appendChild(successMessage);
-
-    // Add animation for success message
-    setTimeout(() => {
-        successMessage.classList.add('success-message-visible');
-    }, 100);
-
-    // Remove message after animation
-    setTimeout(() => {
-        successMessage.classList.remove('success-message-visible');
-        setTimeout(() => {
-            successMessage.remove();
-        }, 300); // Wait for animation to finish before removing
-    }, 3000);
+    showSuccessMessage("Wallet Created Successfully!", 'wallet-section');
 }
 
 // Function to show transaction success message with animation
 function showTransactionSuccess() {
+    showSuccessMessage("Transaction Successful!", 'transaction-section');
+}
+
+// Utility function to show any success message
+function showSuccessMessage(message, parentElementId) {
+    const parentElement = document.getElementById(parentElementId);
+
+    // Prevent duplicate messages
+    const existingMessage = parentElement.querySelector('.success-message');
+    if (existingMessage) existingMessage.remove();
+
     const successMessage = document.createElement('div');
     successMessage.classList.add('success-message');
-    successMessage.innerHTML = "Transaction Successful!";
-    
-    const transactionSection = document.getElementById('transaction-section');
-    transactionSection.appendChild(successMessage);
+    successMessage.innerHTML = message;
 
-    // Add animation for success message
+    parentElement.appendChild(successMessage);
+
+    // Display and animate success message
     setTimeout(() => {
         successMessage.classList.add('success-message-visible');
     }, 100);
 
-    // Remove message after animation
+    // Remove the message after 3 seconds
     setTimeout(() => {
         successMessage.classList.remove('success-message-visible');
-        setTimeout(() => {
-            successMessage.remove();
-        }, 300); // Wait for animation to finish before removing
+        setTimeout(() => successMessage.remove(), 300); // Wait for animation
     }, 3000);
 }
 
@@ -142,16 +129,20 @@ document.querySelectorAll('.navbar a').forEach(anchor => {
         targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 });
+
 const navbar = document.getElementById('navbar');
-  const walletSection = document.getElementById("wallet-section");
-  window.addEventListener('scroll', () => {
+const walletSection = document.getElementById("wallet-section");
+
+window.addEventListener('scroll', () => {
     const walletSectionTop = walletSection.offsetTop;
 
-    if (window.scrollY >= walletSectionTop+100) {
-      navbar.style.display = 'flex'; // Show the navbar
+    if (window.scrollY >= walletSectionTop + 100) {
+        navbar.style.display = 'flex'; // Show the navbar
     } else {
-      navbar.style.display = 'none'; // Hide the navbar
+        navbar.style.display = 'none'; // Hide the navbar
     }
-  });
+});
+
 // Hide the navbar initially
 navbar.style.display = 'none';
+
