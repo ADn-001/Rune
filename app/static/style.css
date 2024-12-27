@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -79,3 +80,222 @@ input, button {
 main {
     padding: 2em;
 }
+=======
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); /* Futuristic gradient */
+    color: #00ffc6; /* Neon aqua */
+    scroll-behavior: smooth;
+}
+
+/* Section */
+.section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+}
+
+.section.visible {
+    opacity: 1;
+}
+
+.hidden {
+    display: none;
+}
+
+h1 {
+    font-size: 3rem;
+    color: #00eaff; /* Neon cyan */
+    text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8); /* Neon glow */
+    background: linear-gradient(90deg, #ff007a, #7000ff); /* Futuristic pink-to-purple */
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 255, 200, 0.8);
+    background: linear-gradient(90deg, #00ffc6, #ff007a); /* Neon aqua-to-pink */
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #00ffcc, #00aaff); /* Neon green-to-blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 255, 200, 0.5); /* Neon shadow */
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #00aaff, #00ffcc); /* Reverse gradient */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 255, 200, 0.7);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 5px rgba(0, 255, 200, 0.3);
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #00ffc6; /* Neon aqua */
+    border-radius: 8px;
+    width: 320px;
+    margin-top: 12px;
+    outline: none;
+    transition: box-shadow 0.3s, border-color 0.3s ease-in-out;
+    color: #00eaff; /* Neon cyan */
+    background: #203a43; /* Dark futuristic background */
+}
+
+input:focus {
+    border-color: #ff007a; /* Neon pink */
+    box-shadow: 0 0 10px rgba(255, 0, 122, 0.7);
+}
+
+#wallet-info,
+#transaction-info {
+    font-weight: bold;
+    margin-top: 20px;
+    color: #00ffc6; /* Neon aqua */
+}
+
+#transaction-success {
+    color: #00ff00; /* Neon green for success */
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(20, 20, 40, 0.9); /* Transparent dark */
+    padding-top: 10px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 255, 200, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.navbar ul li {
+    margin-top: 10px;
+    margin-bottom: 0;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.navbar ul li a {
+    color: #00ffc6; /* Neon aqua */
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    color: #ff007a; /* Neon pink */
+}
+
+/* Success Messages */
+.success-message {
+    font-size: 1.5rem;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    background: linear-gradient(90deg, #00ff00, #32cd32); /* Neon green gradient */
+    box-shadow: 0 4px 10px rgba(0, 255, 0, 0.3);
+    margin-top: 20px;
+    animation: slideIn 0.8s ease-out forwards;
+    display: none;
+    align-items: center;
+}
+
+.success-message i {
+    font-size: 2rem;
+    margin-right: 15px;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.transaction-success, .wallet-success {
+    display: none;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.logo-container {
+    margin: 30px auto;
+}
+
+.svg-logo {
+    width: 250px;
+    height: auto;
+    margin-bottom: 40px;
+}
+
+/* Success message animation styles */
+.success-message {
+    background-color: #0f9d58; /* Neon green */
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.success-message-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body {
+    padding-top: 60px; /* Prevent content overlap with navbar */
+}
+
+>>>>>>> b25c2453ca23d6282f5740a2d52e5496dda2f070

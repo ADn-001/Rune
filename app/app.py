@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from crypto import Blockchain, Transaction, create_wallet_with_address, get_wallet_info, get_wallet_balance, update_wallet_balance
+from crypto import Blockchain, Transaction, create_wallet_with_address, get_wallet_info, get_wallet_balance, update_wallet_balance, get_wallet_balance_internal, update_wallet_balance_internal
 app = Flask(__name__)
 
 
@@ -14,30 +14,35 @@ def home():
 @app.route("/wallet", methods=["POST"])
 def create_wallet_route():
     """API route to create a new wallet."""
-    address = create_wallet_with_address()
+    password = request.json.get("password")
+    if not password:
+        return jsonify({"error": "Password is required"}), 400
+
+    address = create_wallet_with_address(password)
     if address:
         return jsonify({"message": "Wallet created successfully!", "address": address}), 201
     else:
         return jsonify({"error": "Failed to create wallet"}), 500
 
-@app.route("/wallet/<address>", methods=["GET"])
+@app.route("/wallet/<address>", methods=["POST"])
 def get_wallet_info_route(address):
     """API route to retrieve wallet information."""
-    wallet = get_wallet_info(address)
+    password = request.json.get("password")
+    wallet = get_wallet_balance(address, password)
     if wallet:
         return jsonify({"address": address, "balance": wallet["balance"]})
     else:
-        return jsonify({"error": "Wallet not found"}), 404
+        return jsonify({"error": "Invalid address or password"}), 404
 
-
-@app.route("/wallet/balance", methods=["GET"])
+@app.route("/wallet/balance", methods=["POST"])
 def get_balance():
-    address = request.args.get("address")
-    balance = get_wallet_balance(address)
+    address = request.json.get("address")
+    password = request.json.get("password")
+    balance = get_wallet_balance(address, password)
     if balance is not None:
         return jsonify({"address": address, "balance": balance})
     else:
-        return jsonify({"error": "Wallet not found"}), 404
+        return jsonify({"error": "Invalid address or password"}), 404
 
 
 @app.route("/transaction", methods=["POST"])
@@ -45,17 +50,18 @@ def create_transaction():
     payer = request.json.get("payer")
     payee = request.json.get("payee")
     amount = float(request.json.get("amount"))
+    password = request.json.get("password")
 
-    payer_balance = get_wallet_balance(payer)
+    payer_balance = get_wallet_balance(payer, password)
     if payer_balance is None or payer_balance < amount:
-        return jsonify({"error": "Insufficient balance"}), 400
+        return jsonify({"error": "Insufficient balance or invalid password"}), 400
 
-    if get_wallet_balance(payee) is None:
+    if get_wallet_balance_internal(payee) is None:  # Password not required for payee check
         return jsonify({"error": "Payee wallet not found"}), 404
 
     # Update wallet balances
-    update_wallet_balance(payer, payer_balance - amount)
-    update_wallet_balance(payee, get_wallet_balance(payee) + amount)
+    update_wallet_balance(payer, payer_balance - amount, password)
+    update_wallet_balance_internal(payee, get_wallet_balance_internal(payee) + amount)
 
     # Add transaction to blockchain
     transaction = Transaction(amount, payer, payee)

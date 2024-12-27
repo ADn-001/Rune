@@ -5,48 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Crypto Website</title>
+    <!-- Add FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav>
-        <div class="navbar">
-            <h1 class="logo-text">RUNE</h1>
-            <div class="navbar-links">
-                <a href="#welcome-section">Home</a>
-                <span class="spacer"></span><a href="#wallet-section">Wallet</a>
-                <span class="spacer"></span><a href="#transaction-section">Send Coins</a>
-                <span class="spacer"></span><a href="#mining-section">Mining</a>
-            </div>
-        </div>
+    <nav id="navbar" class="navbar">
+        <ul>
+            <li><a href="#welcome-section"><img src="path-to-your-logo.png" alt="Crypto Logo" class="svg-logo"></a></li>
+            <li><a href="#welcome-section">Home</a></li>
+            <li><a href="#wallet-section">Wallet</a></li>
+            <li><a href="#transaction-section">Send Coin</a></li>
+            <li><a href="#mining-section">Mining</a></li>
+        </ul>
     </nav>
+    <!-- Logo Section (Optional) -->
+    <!-- <div class="logo-container">
+        <img src="path-to-your-logo.png" alt="Crypto Logo" class="svg-logo">
+    </div> -->
 
-    <!-- Home Section -->
-    <section id="welcome-section">
+    <!-- Section 1: Welcome -->
+    <div id="welcome-section" class="section visible">
         <h1>RUNE</h1>
         <p>Welcome</p>
-        <button onclick="scrollToSection('wallet-section')">Get Started</button>
-    </section>
+        <button onclick="showWalletSection()">Get Started</button>
+    </div>
 
-    <!-- Wallet Management Section -->
-    <section id="wallet-section" style="display: none;">
+    <!-- Section 2: Wallet Management -->
+    <div id="wallet-section" class="section hidden">
         <h2>Wallet Management</h2>
         <div>
-            <label for="wallet-input">Enter Wallet Address:</label>
-            <input type="text" id="wallet-input" placeholder="Enter your wallet address">
+            <div>
+                <label for="wallet-input">Enter Wallet Address:</label>
+                <input type="text" id="wallet-input" placeholder="Enter your wallet address">
+            </div>
+            <div>
+                <label for="wallet-password-input">Wallet Password:</label>
+                <input type="password" id="wallet-password-input-check" placeholder="password">
+            </div>
             <button id="checkWalletBtn">Check Wallet</button>
+            <!-- <button id="createWalletBtn">Create New Wallet</button> -->
+        </div>
+        <div>
+            <label for="wallet-password-input">Wallet Password:</label>
+            <input type="password" id="wallet-password-input-create" placeholder="Enter a password to secure your wallet">
             <button id="createWalletBtn">Create New Wallet</button>
+        </div>
+        <div id="created-wallet-output" style="margin-top: 20px; font-weight: bold; color: gold;">
+            <!-- New wallet address will appear here -->
         </div>
         <div id="wallet-info" style="margin-top: 20px; font-weight: bold;">
             <!-- Wallet balance or errors will be displayed here -->
         </div>
-    </section>
+        <div id="wallet-created-success" class="success-message hidden">
+            <i class="fa fa-check-circle"></i> Wallet created successfully!
+        </div>
+    </div>
 
-    <!-- Send Coins Section -->
-    <section id="transaction-section" style="display: none;">
+    <!-- Section 3: Send Coins -->
+    <div id="transaction-section" class="section hidden">
         <h2>Send Coins</h2>
         <div>
             <label for="payer-wallet-input">Payer Wallet Address:</label>
             <input type="text" id="payer-wallet-input" placeholder="Enter payer wallet address">
+        </div>
+        <div>
+            <label for="wallet-password-input">Wallet Password:</label>
+            <input type="password" id="wallet-password-input-send" placeholder="Enter your password">
         </div>
         <div>
             <label for="payee-wallet-input">Payee Wallet Address:</label>
@@ -60,13 +84,16 @@
         <div id="transaction-info" style="margin-top: 20px; font-weight: bold;">
             <!-- Transaction results or errors will be displayed here -->
         </div>
-    </section>
+        <div id="transaction-success" class="success-message hidden">
+            <i class="fa fa-check-circle"></i> Transaction successful!
+        </div>
+    </div>
 
-    <!-- Mining Section -->
-    <section id="mining-section" style="display: none;">
+    <!-- Section 4: Mining -->
+    <div id="mining-section" class="section hidden">
         <h2>Mining in Progress...</h2>
         <p>Transaction is being processed. Coins sent successfully!</p>
-    </section>
+    </div>
 
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
