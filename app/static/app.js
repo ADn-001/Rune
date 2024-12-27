@@ -108,6 +108,7 @@ function showSuccessMessage(message, parentElementId) {
 
     // Display and animate success message
     setTimeout(() => {
+        successMessage.style.display = 'flex';
         successMessage.classList.add('success-message-visible');
     }, 100);
 

@@ -148,7 +148,7 @@ input:focus {
     box-shadow: 0 4px 10px rgba(0, 255, 0, 0.3);
     margin-top: 20px;
     animation: slideIn 0.8s ease-out forwards;
-    display: flex;
+    display: none;
     align-items: center;
 }
 

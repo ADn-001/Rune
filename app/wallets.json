@@ -306,5 +306,21 @@
     "dHa0fWoO5iS5zWIOz8kXvbdGSuU=": {
         "balance": 100,
         "private_key": "625d7db9413c921ae39232d16ed9565e80c320190eb5f71393d237ab79451bf5"
+    },
+    "pNsXV2H9+oawo954JLf7nHfcRJU=": {
+        "balance": 100,
+        "private_key": "b2a43be86e1475a9eac4794f1fe15f4524d15b8b4b0c8376ac7ce31aaebbab51"
+    },
+    "ZPFLAywP3TTlxh30lL2JklYeKAE=": {
+        "balance": 100,
+        "private_key": "1b06c595da03826da56eda0013f7fddfed63d5cc8ffe8c799caff36ccbcd748c"
+    },
+    "H/WKQIzq7rWxLN3vLWaUJbXLF/0=": {
+        "balance": 100,
+        "private_key": "3fd54a0f043da4e07ba16f93131e26442f1925a413ea21f90afc3df77efc515b"
+    },
+    "yxdrjQ6Yxu/ORN9NHz4nzW1HWHg=": {
+        "balance": 100.0,
+        "private_key": "90e25589ef3d559ec8a5e3ed873b131d85e6011a0c8b36904c0036f8df27e6db"
     }
 }
