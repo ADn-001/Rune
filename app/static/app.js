@@ -12,8 +12,21 @@ function showWalletSection() {
 }
 
 // Original function: Create a wallet
+// Modified function: Create a wallet
 async function createWallet() {
-    const response = await fetch("/wallet", { method: "POST" });
+    const password = document.getElementById("wallet-password-input-create").value;
+
+
+    if (!password) {
+        alert("Password is required to create a wallet.");
+        return;
+    }
+
+    const response = await fetch("/wallet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password })
+    });
     const data = await response.json();
 
     if (response.ok) {
@@ -21,7 +34,6 @@ async function createWallet() {
         walletOutput.innerHTML = `Wallet created successfully! Address: ${data.address}`;
         document.getElementById("wallet-input").value = data.address;
 
-        // Show success animation for wallet creation
         showWalletCreatedSuccess();
         showWalletSection();
     } else {
@@ -29,7 +41,9 @@ async function createWallet() {
     }
 }
 
+
 // Original function: Check wallet balance
+// Modified function: Check wallet balance
 async function getWalletBalance() {
     const walletAddress = document.getElementById('wallet-input').value;
 
@@ -38,23 +52,35 @@ async function getWalletBalance() {
         return;
     }
 
-    const response = await fetch(`/wallet/${walletAddress}`);
+    const password = document.getElementById("wallet-password-input-check").value;
+    if (!password) {
+        alert("Password is required to check wallet balance.");
+        return;
+    }
+
+    const response = await fetch(`/wallet/balance`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: walletAddress, password: password })
+    });
     const data = await response.json();
 
     if (response.ok) {
         document.getElementById('wallet-info').innerHTML = `Wallet Balance: ${data.balance}`;
     } else {
-        document.getElementById('wallet-info').innerHTML = 'Invalid wallet address!';
+        alert(data.error || "Failed to retrieve wallet balance.");
     }
 }
 
-// Original function: Send coins
+
 async function sendCoins() {
     const payerAddress = document.getElementById('payer-wallet-input').value;
     const payeeAddress = document.getElementById('payee-wallet-input').value;
     const amount = parseFloat(document.getElementById('amount-input').value);
-    if (!payerAddress || !payeeAddress || isNaN(amount) || amount <= 0) {
-        alert("Please fill in valid payer, payee, and amount fields.");
+    const password = document.getElementById('wallet-password-input-send').value;
+
+    if (!payerAddress || !payeeAddress || isNaN(amount) || amount <= 0 || !password) {
+        alert("Please fill in valid payer, payee, amount fields, and password.");
         return;
     }
 
@@ -62,7 +88,7 @@ async function sendCoins() {
         const response = await fetch('/transaction', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ payer: payerAddress, payee: payeeAddress, amount: amount })
+            body: JSON.stringify({ payer: payerAddress, payee: payeeAddress, amount, password })
         });
 
         const data = await response.json();

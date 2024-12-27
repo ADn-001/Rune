@@ -4,6 +4,7 @@ import time
 import os
 import base64
 from flask import jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
 wallet_data = {}
 class Transaction:
     def __init__(self, amount, payer, payee):
@@ -114,26 +115,55 @@ def generate_wallet_address():
     
     return wallet_address, private_key.hex()
 
-def create_wallet_with_address():
+def create_wallet_with_address(password):
     """Generate a new wallet with an address."""
     address, private_key = generate_wallet_address()
-    wallet_data[address] = {"balance": 100, "private_key": private_key}  # Store balance and private key
+    hashed_password = generate_password_hash(password)  # Hash the provided password
+    wallet_data[address] = {
+        "balance": 100,
+        "private_key": private_key,
+        "password": hashed_password  # Store hashed password
+    }
     save_wallets(wallet_data)  # Save to persistent storage
     return address
 
-def get_wallet_info(address):
-    """Retrieve wallet information."""
-    return wallet_data.get(address)
 
-def get_wallet_balance(address):
-    """Retrieve only the wallet balance."""
+def get_wallet_info(address, password):
+    """Retrieve wallet information after verifying the password."""
+    wallet = wallet_data.get(address)
+    if wallet and check_password_hash(wallet["password"], password):
+        return wallet
+    else:
+        return None
+
+
+def get_wallet_balance(address, password):
+    """Retrieve only the wallet balance after verifying the password."""
+    wallet = wallet_data.get(address)
+    if wallet and check_password_hash(wallet["password"], password):
+        return wallet["balance"]  # Return the balance directly as a float
+    else:
+        return None  # Return None if the wallet is not found or password is incorrect
+
+def get_wallet_balance_internal(address):
+    """Retrieve only the wallet balance after verifying the password."""
     wallet = wallet_data.get(address)
     if wallet:
         return wallet["balance"]  # Return the balance directly as a float
     else:
-        return None  # Return None if the wallet is not found
-def update_wallet_balance(address, new_balance):
-    """Update the balance of a wallet."""
+        return None  # Return None if the wallet is not found or password is incorrect
+
+def update_wallet_balance(address, new_balance, password):
+    """Update the balance of a wallet after verifying the password."""
+    if address in wallet_data and check_password_hash(wallet_data[address]["password"], password):
+        wallet_data[address]["balance"] = new_balance
+        save_wallets(wallet_data)  # Save updated wallet data to persistent storage
+        return jsonify({"message": "Wallet balance updated successfully"})
+    else:
+        return jsonify({"error": "Wallet not found or incorrect password"}), 404
+
+def update_wallet_balance_internal(address, new_balance):
+    """Update the balance of payee."""
     if address in wallet_data:
         wallet_data[address]["balance"] = new_balance
         save_wallets(wallet_data)  # Save updated wallet data to persistent storage

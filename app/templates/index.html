@@ -34,9 +34,20 @@
     <div id="wallet-section" class="section hidden">
         <h2>Wallet Management</h2>
         <div>
-            <label for="wallet-input">Enter Wallet Address:</label>
-            <input type="text" id="wallet-input" placeholder="Enter your wallet address">
+            <div>
+                <label for="wallet-input">Enter Wallet Address:</label>
+                <input type="text" id="wallet-input" placeholder="Enter your wallet address">
+            </div>
+            <div>
+                <label for="wallet-password-input">Wallet Password:</label>
+                <input type="password" id="wallet-password-input-check" placeholder="password">
+            </div>
             <button id="checkWalletBtn">Check Wallet</button>
+            <!-- <button id="createWalletBtn">Create New Wallet</button> -->
+        </div>
+        <div>
+            <label for="wallet-password-input">Wallet Password:</label>
+            <input type="password" id="wallet-password-input-create" placeholder="Enter a password to secure your wallet">
             <button id="createWalletBtn">Create New Wallet</button>
         </div>
         <div id="created-wallet-output" style="margin-top: 20px; font-weight: bold; color: gold;">
@@ -56,6 +67,10 @@
         <div>
             <label for="payer-wallet-input">Payer Wallet Address:</label>
             <input type="text" id="payer-wallet-input" placeholder="Enter payer wallet address">
+        </div>
+        <div>
+            <label for="wallet-password-input">Wallet Password:</label>
+            <input type="password" id="wallet-password-input-send" placeholder="Enter your password">
         </div>
         <div>
             <label for="payee-wallet-input">Payee Wallet Address:</label>
