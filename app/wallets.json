@@ -1,0 +1,17 @@
+{
+    "dDJgFwgXHRCVZVFtNmTzeXwH6NI=": {
+        "balance": 70.0,
+        "private_key": "0be61f403c1dde5b54df20472bc4a55c6cc437cb16e5de9da23e921a07c27496",
+        "password": "pbkdf2:sha256:600000$7ZY3KOqZGZwxFtSj$35d7ab820ebde1570a1efbf8180849e60488fbb645510e5aca0fe5192495dbd6"
+    },
+    "ghxNF8LaHjO03rYLmCmu8TUGtEA=": {
+        "balance": 130.0,
+        "private_key": "70761eb9470a0daaea033356997d5d403b2bbf7264781a5cfe4051a23d321c73",
+        "password": "pbkdf2:sha256:600000$elrkfD6xfeHcwYuV$81f4dd66db29d507b8cc750850d160ba7f912fcf2692b72955daee701a651da6"
+    },
+    "2Ylw0LuQGZQ8yD592izpbT0f8ag=": {
+        "balance": 100,
+        "private_key": "46d4091765b145c38b3b95379bd1476335498f8ce5c47904fe10b8aae2482c18",
+        "password": "pbkdf2:sha256:600000$VTFY3QxOjwBLNns6$81829fb58af194cec470dc092e24dab1f579b7e33324035011a8c6663d27f835"
+    }
+}
