@@ -20,24 +20,36 @@ class Transaction:
 
 
 class Block:
-    def __init__(self, prev_hash, transaction, timestamp=None):
+    def __init__(self, prev_hash, transactions, timestamp=None):
         self.prev_hash = prev_hash
-        self.transaction = transaction
+        self.transactions = transactions  # List of transactions
         self.timestamp = timestamp or time.time()
         self.nonce = 0
 
+    # def compute_hash(self):
+    #     block_string = json.dumps({
+    #         "prev_hash": self.prev_hash,
+    #         "transactions": [tx.to_dict() for tx in self.transactions],
+    #         "timestamp": self.timestamp,
+    #         "nonce": self.nonce,
+    #     }, sort_keys=True).encode()
+    #     return hashlib.sha256(block_string).hexdigest()
     def compute_hash(self):
+        # Ensure prev_hash is not None, if None set it to empty string
+        prev_hash = self.prev_hash if self.prev_hash else ""
+
+        # Serialize block data to JSON
         block_string = json.dumps({
-            "prev_hash": self.prev_hash,
-            "transaction": self.transaction.to_dict(),
+            "prev_hash": prev_hash,
+            "transactions": [tx.to_dict() for tx in self.transactions],
             "timestamp": self.timestamp,
             "nonce": self.nonce,
-        }, sort_keys=True).encode()
+        }, sort_keys=True).encode('utf-8')  # Use explicit UTF-8 encoding
+        # Return the sha256 hash of the serialized string
         return hashlib.sha256(block_string).hexdigest()
 
-
 class Blockchain:
-    difficulty = 4
+    difficulty = 0
 
     def __init__(self):
         self.chain = []
@@ -46,15 +58,24 @@ class Blockchain:
 
     def create_genesis_block(self):
         genesis_transaction = Transaction(0, "genesis", "network")
-        genesis_block = Block("0", genesis_transaction)
+        genesis_block = Block("0", [genesis_transaction])
         genesis_block.nonce = self.proof_of_work(genesis_block)
         self.chain.append(genesis_block)
 
+
+    # def proof_of_work(self, block):
+    #     block.nonce = 0
+    #     while not block.compute_hash().startswith("0" * self.difficulty):
+    #         block.nonce += 1
+    #     return block.nonce
     def proof_of_work(self, block):
         block.nonce = 0
-        while not block.compute_hash().startswith("0" * self.difficulty):
+        block_hash = block.compute_hash()  # Initial hash calculation
+        while not block_hash.startswith("0" * self.difficulty):  # Check for difficulty
             block.nonce += 1
+            block_hash = block.compute_hash()  # Recompute the hash after incrementing nonce
         return block.nonce
+
 
     def add_transaction(self, transaction):
         self.pending_transactions.append(transaction)
