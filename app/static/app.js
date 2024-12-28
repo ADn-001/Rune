@@ -30,23 +30,33 @@ async function createWallet() {
     const data = await response.json();
 
     if (response.ok) {
+        showCheckWalletForm();
         const walletOutput = document.getElementById("created-wallet-output");
         walletOutput.innerHTML = `Wallet created successfully! Address: ${data.address}`;
         document.getElementById("wallet-input").value = data.address;
-
+        document.getElementById("wallet-password-input").value = password;
         showWalletCreatedSuccess();
-        showWalletSection();
+        
     } else {
         alert(data.error || "Failed to create wallet");
     }
 }
 
+function showCreateWalletForm() {
+    toggleForm('none', 'wallet-input-form');
+    toggleForm('block', 'wallet-create-form');
+} 
+
+function showCheckWalletForm() {
+    toggleForm('none', 'wallet-create-form');
+    toggleForm('block', 'wallet-input-form');
+} 
 
 // Original function: Check wallet balance
 // Modified function: Check wallet balance
 async function getWalletBalance() {
+    showCheckWalletForm();
     const walletAddress = document.getElementById('wallet-input').value;
-
     if (!walletAddress) {
         alert("Please enter a valid wallet address!");
         return;
@@ -66,21 +76,40 @@ async function getWalletBalance() {
     const data = await response.json();
 
     if (response.ok) {
-        document.getElementById('wallet-info').innerHTML = `Wallet Balance: ${data.balance}`;
+        const wallet_title = document.getElementById("wallet-title");
+        wallet_title.style.display = 'block';
+        //document.getElementById('wallet-info').classList.remove('hidden');
+        document.getElementById('wallet-Address').innerHTML = `Address: ${walletAddress}`;
+        document.getElementById('wallet-info').innerHTML = `${data.balance}`;
+        toggleForm('none', 'wallet-input-form')
     } else {
+        document.getElementById('wallet-error').innerHTML = `Something went wrong :(`;
         alert(data.error || "Failed to retrieve wallet balance.");
     }
 }
 
+async function donthavewallet() {
+    toggleForm('block', 'wallet-create-form')
+}
 
+async function toggleForm(toggle='', form='') {
+    const targetform = document.getElementById(form);
+        targetform.style.display = toggle;
+}
 async function sendCoins() {
-    const payerAddress = document.getElementById('payer-wallet-input').value;
+    const payerAddress = document.getElementById('wallet-input').value;
     const payeeAddress = document.getElementById('payee-wallet-input').value;
     const amount = parseFloat(document.getElementById('amount-input').value);
-    const password = document.getElementById('wallet-password-input-send').value;
+    const password = document.getElementById('wallet-password-input-check').value;
 
-    if (!payerAddress || !payeeAddress || isNaN(amount) || amount <= 0 || !password) {
-        alert("Please fill in valid payer, payee, amount fields, and password.");
+    if (!payeeAddress || isNaN(amount) || amount <= 0) {
+        alert("Please fill in valid payee, amount fields, and password.");
+        return;
+    }
+
+    if (!payerAddress || !password) {
+        alert("Please fill in your wallet address and password.");
+        document.getElementById('wallet-section').scrollIntoView({ behavior: 'smooth' });
         return;
     }
 
@@ -106,6 +135,7 @@ async function sendCoins() {
         document.getElementById("transaction-info").innerHTML =
             `An error occurred: ${error.message}`;
     }
+
 }
 
 // Function to show wallet creation success message with animation
@@ -142,6 +172,7 @@ function showSuccessMessage(message, parentElementId) {
     setTimeout(() => {
         successMessage.classList.remove('success-message-visible');
         setTimeout(() => successMessage.remove(), 300); // Wait for animation
+        document.getElementById('wallet-section').scrollIntoView({ behavior: 'smooth' });
     }, 3000);
 }
 
@@ -149,6 +180,7 @@ function showSuccessMessage(message, parentElementId) {
 document.getElementById("sendCoinsBtn").addEventListener("click", sendCoins);
 document.getElementById("createWalletBtn").addEventListener("click", createWallet);
 document.getElementById("checkWalletBtn").addEventListener("click", getWalletBalance);
+// document.getElementById("text-button").addEventListener("click", showCreateWalletForm);
 document.querySelectorAll('.navbar a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
