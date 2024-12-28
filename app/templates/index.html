@@ -34,44 +34,59 @@
     <div id="wallet-section" class="section hidden">
         <h2>Wallet Management</h2>
         <div>
-            <div>
-                <label for="wallet-input">Enter Wallet Address:</label>
-                <input type="text" id="wallet-input" placeholder="Enter your wallet address">
+            <div id="wallet-title" style="display: none;">
+                <div style="margin-bottom: 5%; margin-top: 5%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">RUNES</div>
+                <div id="wallet-info" style="margin-bottom: 5%; margin-top: 5%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">
+                    <!-- <h1 style="margin-bottom: 25%; margin-top: 15%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">RUNE</h1> -->
+                </div>
+                <div id="wallet-Address" style="margin-bottom: 25%; margin-top: 5%; font-size: 2rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">
+                    <!--wallet address will appear here -->
+                </div>
             </div>
+            <div id="wallet-input-form" style="display: block">
+                <div>
+                    <label for="wallet-input">Enter Wallet Address:</label>
+                    <input type="text" id="wallet-input" placeholder="Enter your wallet address">
+                </div>
+                <div>
+                    <label for="wallet-password-input">Wallet Password:</label>
+                    <input type="password" id="wallet-password-input-check" placeholder="password">
+                </div>
+                <button id="checkWalletBtn">Check Wallet</button>
+                <div class="text-button" onclick="showCreateWalletForm()">Don't have a Wallet?</div>
+                <!-- <button id="createWalletBtn">Create New Wallet</button> -->
+            </div>
+        </div>
+        <div id="wallet-create-form" style="display: none">
             <div>
+                <div id="created-wallet-output" style="margin-top: 20px; font-weight: bold; color: purple;">
+                    <!-- New wallet address will appear here -->
+                </div>
+                <div id="wallet-error" style="margin-top: 20px; font-weight: bold; color: purple;">
+                    <!-- Wallet balance or errors will be displayed here -->
+                </div>
+                <div id="wallet-created-success" class="success-message hidden">
+                    <i class="fa fa-check-circle"></i> Wallet created successfully!
+                </div>
                 <label for="wallet-password-input">Wallet Password:</label>
-                <input type="password" id="wallet-password-input-check" placeholder="password">
+                <input type="password" id="wallet-password-input-create" placeholder="Enter a password to secure your wallet">
+                <button id="createWalletBtn">Create New Wallet</button>
             </div>
-            <button id="checkWalletBtn">Check Wallet</button>
-            <!-- <button id="createWalletBtn">Create New Wallet</button> -->
         </div>
-        <div>
-            <label for="wallet-password-input">Wallet Password:</label>
-            <input type="password" id="wallet-password-input-create" placeholder="Enter a password to secure your wallet">
-            <button id="createWalletBtn">Create New Wallet</button>
-        </div>
-        <div id="created-wallet-output" style="margin-top: 20px; font-weight: bold; color: gold;">
-            <!-- New wallet address will appear here -->
-        </div>
-        <div id="wallet-info" style="margin-top: 20px; font-weight: bold;">
-            <!-- Wallet balance or errors will be displayed here -->
-        </div>
-        <div id="wallet-created-success" class="success-message hidden">
-            <i class="fa fa-check-circle"></i> Wallet created successfully!
-        </div>
+        
     </div>
 
     <!-- Section 3: Send Coins -->
     <div id="transaction-section" class="section hidden">
         <h2>Send Coins</h2>
-        <div>
+        <!-- <div>
             <label for="payer-wallet-input">Payer Wallet Address:</label>
             <input type="text" id="payer-wallet-input" placeholder="Enter payer wallet address">
-        </div>
-        <div>
+        </div> -->
+        <!-- <div>
             <label for="wallet-password-input">Wallet Password:</label>
             <input type="password" id="wallet-password-input-send" placeholder="Enter your password">
-        </div>
+        </div> -->
         <div>
             <label for="payee-wallet-input">Payee Wallet Address:</label>
             <input type="text" id="payee-wallet-input" placeholder="Enter payee wallet address">

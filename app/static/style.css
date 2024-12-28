@@ -29,16 +29,25 @@ body {
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: 4rem;
     color: #00eaff; /* Neon cyan */
     text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8); /* Neon glow */
     background: linear-gradient(90deg, #ff007a, #7000ff); /* Futuristic pink-to-purple */
     -webkit-background-clip: text;
     color: transparent;
 }
+label {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+p {
+    font-size: 2rem;
+    font-weight: bold;
+}
 
 h2 {
-    font-size: 2rem;
+    font-size: 3rem;
     margin-bottom: 20px;
     text-shadow: 0 2px 4px rgba(0, 255, 200, 0.8);
     background: linear-gradient(90deg, #00ffc6, #ff007a); /* Neon aqua-to-pink */
@@ -144,8 +153,8 @@ input:focus {
     padding: 20px;
     border-radius: 10px;
     color: white;
-    background: linear-gradient(90deg, #00ff00, #32cd32); /* Neon green gradient */
-    box-shadow: 0 4px 10px rgba(0, 255, 0, 0.3);
+    background: linear-gradient(90deg, #c300ff, #f55555); /* Neon green gradient */
+    box-shadow: 0 4px 10px rgba(5, 31, 230, 0.3);
     margin-top: 20px;
     animation: slideIn 0.8s ease-out forwards;
     display: none;
@@ -215,3 +224,15 @@ body {
     padding-top: 60px; /* Prevent content overlap with navbar */
 }
 
+.text-button {
+    margin-top: 3%;
+    background: none;
+    border: none;
+    color: linear-gradient(90deg, #c300ff, #f55555);;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 22px;
+  }
+  .text-button:hover {
+    color: linear-gradient(90deg, #c300ff, #f55555);;
+  }
