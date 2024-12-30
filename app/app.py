@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
-from crypto import Blockchain, Transaction, create_wallet_with_address, get_wallet_info, get_wallet_balance, update_wallet_balance, get_wallet_balance_internal, update_wallet_balance_internal, Block
+from crypto import Blockchain, create_wallet_with_address, get_wallet_balance, get_wallet_balance_internal, send_money, Block
+import hashlib
+import json
 app = Flask(__name__)
 
 
@@ -18,7 +20,7 @@ def create_wallet_route():
     if not password:
         return jsonify({"error": "Password is required"}), 400
 
-    address = create_wallet_with_address(password)
+    address = create_wallet_with_address(password, blockchain)
     if address:
         return jsonify({"message": "Wallet created successfully!", "address": address}), 201
     else:
@@ -38,7 +40,7 @@ def get_wallet_info_route(address):
 def get_balance():
     address = request.json.get("address")
     password = request.json.get("password")
-    balance = get_wallet_balance(address, password)
+    balance = get_wallet_balance(address, password, blockchain)
     if balance is not None:
         return jsonify({"address": address, "balance": balance})
     else:
@@ -52,7 +54,7 @@ def create_transaction():
     amount = float(request.json.get("amount"))
     password = request.json.get("password")
 
-    payer_balance = get_wallet_balance(payer, password)
+    payer_balance = blockchain.get_balance(payer)
     if payer_balance is None or payer_balance < amount:
         return jsonify({"error": "Insufficient balance or invalid password"}), 400
 
@@ -60,12 +62,7 @@ def create_transaction():
         return jsonify({"error": "Payee wallet not found"}), 404
 
     # Update wallet balances
-    update_wallet_balance(payer, payer_balance - amount, password)
-    update_wallet_balance_internal(payee, get_wallet_balance_internal(payee) + amount)
-
-    # Add transaction to blockchain
-    transaction = Transaction(amount, payer, payee)
-    blockchain.add_transaction(transaction)
+    send_money(payer, payee, amount, password, blockchain)
 
     return jsonify({"message": "Transaction added to pending transactions"})
 
@@ -85,7 +82,7 @@ def get_mining_data():
     latest_block = blockchain.chain[-1]
     mining_data = {
         "prev_hash": latest_block.compute_hash(),
-        "transactions": [t.to_dict() for t in blockchain.pending_transactions],
+        "transactions":[transaction.to_dict() for transaction in blockchain.pending_transactions] ,  # Single transaction
         "difficulty": blockchain.difficulty
     }
     return jsonify(mining_data), 200
@@ -93,30 +90,46 @@ def get_mining_data():
 
 @app.route("/submit-mined-block", methods=["POST"])
 def submit_mined_block():
-    """API route to accept a mined block, validate it, and add it to the blockchain."""
     data = request.json
+    # print("Received block data:", data)  # Debugging line to check received block data
 
-    # Validate incoming data structure
     required_fields = ["prev_hash", "transactions", "nonce", "miner_address", "block_hash"]
     if not all(field in data for field in required_fields):
         return jsonify({"error": "Incomplete block data"}), 400
 
     prev_hash = data["prev_hash"]
-    transactions = data["transactions"]
+    transactions = data["transactions"][0]
     nonce = data["nonce"]
     miner_address = data["miner_address"]
     block_hash = data["block_hash"]
 
+    # Debugging: Print transaction data to inspect the format
+    # print("Transactions data:", transactions)  # Debugging print for transaction data
+
     # Reconstruct the block for validation
     try:
-        new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions])
+        new_block = Block(prev_hash, transactions)  # Single transaction
     except Exception as e:
         return jsonify({"error": f"Invalid transaction data: {str(e)}"}), 400
 
     new_block.nonce = nonce
-
-    # Recalculate hash for validation
+    print("rebult block data:", new_block)
+    # Debugging: print block data and recalculated hash
     recalculated_hash = new_block.compute_hash()
+    print("Recalculated hash:", recalculated_hash)  # Debugging line to check hash
+    print("Block hash being submitted:", block_hash)  # Debugging line to check submitted hash
+
+    # # Ensure consistency in the way data is serialized for hash calculation
+    # serialized_data = json.dumps({
+    #     "prev_hash": new_block.prev_hash,
+    #     "transactions": new_block.transactions,
+    #     "nonce": new_block.nonce
+    # }).encode()
+    # print("rebult block data:", serialized_data)
+    # # Ensure that the recalculated hash is consistent
+    # recalculated_hash = hashlib.md5(serialized_data).hexdigest()
+    # print("Recalculated hash (after serialization fix):", recalculated_hash)
+
     if recalculated_hash != block_hash:
         return jsonify({"error": "Block hash does not match the recalculated hash"}), 400
 
@@ -128,11 +141,15 @@ def submit_mined_block():
 
     # Add the block to the blockchain
     blockchain.chain.append(new_block)
+    print("mining sucessful")
 
     # Reward the miner
-    blockchain.add_transaction(Transaction(1, "network", miner_address))
-
+    # blockchain.add_transaction(Transaction(1, "network", miner_address))
+    blockchain.pop_transaction()
+    # Reward the miner
     return jsonify({"message": "Block added successfully!", "miner_rewarded": miner_address}), 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

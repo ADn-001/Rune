@@ -20,86 +20,86 @@ class Transaction:
 
 
 class Block:
-    def __init__(self, prev_hash, transactions, timestamp=None):
+    def __init__(self, prev_hash, transactions):
         self.prev_hash = prev_hash
-        self.transactions = transactions  # List of transactions
-        self.timestamp = timestamp or time.time()
-        self.nonce = 0
+        self.transactions = [tx.to_dict() for tx in transactions] # Ensure it's a list, even for a single transaction
+        self.nonce = 0  # Simplified nonce
 
-    # def compute_hash(self):
-    #     block_string = json.dumps({
-    #         "prev_hash": self.prev_hash,
-    #         "transactions": [tx.to_dict() for tx in self.transactions],
-    #         "timestamp": self.timestamp,
-    #         "nonce": self.nonce,
-    #     }, sort_keys=True).encode()
-    #     return hashlib.sha256(block_string).hexdigest()
     def compute_hash(self):
-        # Ensure prev_hash is not None, if None set it to empty string
-        prev_hash = self.prev_hash if self.prev_hash else ""
+        # Ensure transactions are in dictionary format
+        # transactions = (
+        #     [transaction.to_dict() for transaction in self.transactions]
+        #     if hasattr(self.transactions[0], "to_dict")  # Check if to_dict exists
+        #     else self.transactions  # Assume they are already dictionaries
+        # )
 
-        # Serialize block data to JSON
-        block_string = json.dumps({
+        # # Prepare the block data
+        # block_data = {
+        #     "prev_hash": self.prev_hash,
+        #     "transactions": transactions,
+        #     "nonce": self.nonce,
+        # }
+        prev_hash = self.prev_hash if self.prev_hash else ""
+        block_data = json.dumps({
             "prev_hash": prev_hash,
-            "transactions": [tx.to_dict() for tx in self.transactions],
-            "timestamp": self.timestamp,
+            "transactions": self.transactions,
             "nonce": self.nonce,
-        }, sort_keys=True).encode('utf-8')  # Use explicit UTF-8 encoding
-        # Return the sha256 hash of the serialized string
-        return hashlib.sha256(block_string).hexdigest()
+        }, sort_keys=True).encode('utf-8')
+        # Serialize block data to a JSON string
+        block_string = json.dumps(block_data, sort_keys=True).encode()
+        print("block data going through compute_hash:", block_string)
+        # Compute and return the hash
+        return hashlib.md5(block_string).hexdigest()
+
+
 
 class Blockchain:
-    difficulty = 0
-
+    difficulty = 2  # Reduced difficulty for mining
     def __init__(self):
         self.chain = []
         self.pending_transactions = []
         self.create_genesis_block()
 
     def create_genesis_block(self):
-        genesis_transaction = Transaction(0, "genesis", "network")
-        genesis_block = Block("0", [genesis_transaction])
+        total_coin = 1000000000
+        genesis_transaction = Transaction(total_coin, "genesis", "rune_network")
+        genesis_block = Block("0", genesis_transaction)
         genesis_block.nonce = self.proof_of_work(genesis_block)
         self.chain.append(genesis_block)
 
-
-    # def proof_of_work(self, block):
-    #     block.nonce = 0
-    #     while not block.compute_hash().startswith("0" * self.difficulty):
-    #         block.nonce += 1
-    #     return block.nonce
     def proof_of_work(self, block):
         block.nonce = 0
-        block_hash = block.compute_hash()  # Initial hash calculation
-        while not block_hash.startswith("0" * self.difficulty):  # Check for difficulty
+        while True:
+            hash_attempt = hashlib.md5((str(block.nonce) + block.compute_hash()).encode()).hexdigest()
+            if hash_attempt.startswith("0" * self.difficulty):  # Simple proof of work
+                return block.nonce, hash_attempt
             block.nonce += 1
-            block_hash = block.compute_hash()  # Recompute the hash after incrementing nonce
-        return block.nonce
-
 
     def add_transaction(self, transaction):
         self.pending_transactions.append(transaction)
+    def pop_transaction(self):
+        self.pending_transactions.pop(0)
+    # def add_transaction(self, transaction):
+    #     self.pending_transactions.append(transaction)
 
-    def mine_pending_transactions(self, miner_address):
-        if not self.pending_transactions:
-            return None
+    # def mine_pending_transactions(self):
+    #     if not self.pending_transactions:
+    #         return None
 
-        for transaction in self.pending_transactions:
-            new_block = Block(self.chain[-1].compute_hash(), transaction)
-            new_block.nonce = self.proof_of_work(new_block)
-            self.chain.append(new_block)
+    #     for transaction in self.pending_transactions:
+    #         new_block = Block(self.chain[-1].compute_hash(), transaction)
+    #         new_block.nonce = self.proof_of_work(new_block)
+    #         self.chain.append(new_block)
 
-        self.pending_transactions.clear()
-        reward_transaction = Transaction(1, "network", miner_address)
-        self.add_transaction(reward_transaction)
+    #     self.pending_transactions.clear()
 
     def get_balance(self, wallet_address):
-        balance = 0
+        balance = 0 
         for block in self.chain:
-            if block.transaction.payer == wallet_address:
-                balance -= block.transaction.amount
-            if block.transaction.payee == wallet_address:
-                balance += block.transaction.amount
+            if block.transactions[0].payer == wallet_address:
+                balance -= block.transactions[0].amount
+            if block.transactions[0].payee == wallet_address:
+                balance += block.transactions[0].amount
         return balance
 
 # Persistent storage file for wallets
@@ -136,16 +136,18 @@ def generate_wallet_address():
     
     return wallet_address, private_key.hex()
 
-def create_wallet_with_address(password):
+def create_wallet_with_address(password, blockchain):
     """Generate a new wallet with an address."""
     address, private_key = generate_wallet_address()
     hashed_password = generate_password_hash(password)  # Hash the provided password
     wallet_data[address] = {
-        "balance": 100,
         "private_key": private_key,
         "password": hashed_password  # Store hashed password
     }
     save_wallets(wallet_data)  # Save to persistent storage
+    if(blockchain.get_balance("rune_network") > 100):
+        transaction = Transaction(10, "rune_network", address)
+        blockchain.add_transaction(transaction)
     return address
 
 
@@ -158,36 +160,72 @@ def get_wallet_info(address, password):
         return None
 
 
-def get_wallet_balance(address, password):
+def get_wallet_balance(address, password, blockchain):
     """Retrieve only the wallet balance after verifying the password."""
     wallet = wallet_data.get(address)
     if wallet and check_password_hash(wallet["password"], password):
-        return wallet["balance"]  # Return the balance directly as a float
+        return blockchain.get_balance(address)  # Return the balance directly as a float
     else:
         return None  # Return None if the wallet is not found or password is incorrect
 
-def get_wallet_balance_internal(address):
+def get_wallet_balance_internal(address, blockchain):
     """Retrieve only the wallet balance after verifying the password."""
     wallet = wallet_data.get(address)
     if wallet:
-        return wallet["balance"]  # Return the balance directly as a float
+        return blockchain.get_balance(address)  # Return the balance directly as a float
     else:
         return None  # Return None if the wallet is not found or password is incorrect
 
-def update_wallet_balance(address, new_balance, password):
-    """Update the balance of a wallet after verifying the password."""
-    if address in wallet_data and check_password_hash(wallet_data[address]["password"], password):
-        wallet_data[address]["balance"] = new_balance
-        save_wallets(wallet_data)  # Save updated wallet data to persistent storage
-        return jsonify({"message": "Wallet balance updated successfully"})
-    else:
-        return jsonify({"error": "Wallet not found or incorrect password"}), 404
+def send_money(payer_address, payee_address, amount, password, blockchain):
+    """
+    Facilitate sending money between wallets by creating and verifying a transaction.
+    
+    :param payer_address: The wallet address of the sender.
+    :param payee_address: The wallet address of the recipient.
+    :param amount: The amount to transfer.
+    :param password: Password for the payer's wallet.
+    :param blockchain: The instance of the blockchain to interact with.
+    :return: A dictionary containing the result of the transaction.
+    """
+    # Verify payer's wallet exists and password is correct
+    payer_wallet = get_wallet_info(payer_address, password)
+    if not payer_wallet:
+        return {"success": False, "message": "Invalid wallet address or password for payer."}
 
-def update_wallet_balance_internal(address, new_balance):
-    """Update the balance of payee."""
-    if address in wallet_data:
-        wallet_data[address]["balance"] = new_balance
-        save_wallets(wallet_data)  # Save updated wallet data to persistent storage
-        return jsonify({"message": "Wallet balance updated successfully"})
-    else:
-        return jsonify({"error": "Wallet not found"}), 404
+    # Verify payee's wallet exists
+    if payee_address not in wallet_data:
+        return {"success": False, "message": "Payee wallet address does not exist."}
+
+    # Check payer's balance
+    payer_balance = blockchain.get_balance(payer_address)
+    if payer_balance < amount:
+        return {"success": False, "message": "Insufficient funds in payer's wallet."}
+
+    # Create and add the transaction
+    transaction = Transaction(amount, payer_address, payee_address)
+    blockchain.add_transaction(transaction)
+    
+    return {"success": True, "message": "Transaction added successfully.", "transaction": transaction.to_dict()}
+
+def reward_miner(miner_address, blockchain):
+    if(blockchain.get_balance("rune_network") > 10):
+        transaction = Transaction(10, "rune_network", miner_address)
+        blockchain.add_transaction(transaction)
+
+# def sendMoney(payer, payee, new_balance, password):
+#     """Update the balance of a wallet after verifying the password."""
+#     if payee in wallet_data and check_password_hash(wallet_data[payee]["password"], password):
+#         Blockchain.add_transaction(Transaction(new_balance, payee))
+#         save_wallets(wallet_data)  # Save updated wallet data to persistent storage
+#         return jsonify({"message": "Wallet balance updated successfully"})
+#     else:
+#         return jsonify({"error": "Wallet not found or incorrect password"}), 404
+
+# def update_wallet_balance_internal(address, new_balance):
+#     """Update the balance of payee."""
+#     if address in wallet_data:
+#         wallet_data[address]["balance"] = new_balance
+#         save_wallets(wallet_data)  # Save updated wallet data to persistent storage
+#         return jsonify({"message": "Wallet balance updated successfully"})
+#     else:
+#         return jsonify({"error": "Wallet not found"}), 404
