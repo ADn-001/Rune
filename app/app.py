@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
-from crypto import Blockchain, Transaction, create_wallet_with_address, get_wallet_info, get_wallet_balance, update_wallet_balance, get_wallet_balance_internal, update_wallet_balance_internal, Block
+from crypto import Blockchain, Transaction, create_wallet_with_address, does_wallet_exist, get_wallet_balance, send_coin, Block
+import time
 app = Flask(__name__)
 
 
@@ -18,7 +19,7 @@ def create_wallet_route():
     if not password:
         return jsonify({"error": "Password is required"}), 400
 
-    address = create_wallet_with_address(password)
+    address = create_wallet_with_address(password, blockchain)
     if address:
         return jsonify({"message": "Wallet created successfully!", "address": address}), 201
     else:
@@ -38,11 +39,12 @@ def get_wallet_info_route(address):
 def get_balance():
     address = request.json.get("address")
     password = request.json.get("password")
-    balance = get_wallet_balance(address, password)
-    if balance is not None:
-        return jsonify({"address": address, "balance": balance})
-    else:
-        return jsonify({"error": "Invalid address or password"}), 404
+    if (does_wallet_exist(address)):
+        balance = get_wallet_balance(address, password, blockchain)
+        if balance is not None:
+            return jsonify({"address": address, "balance": balance})
+        else:
+            return jsonify({"error": "Invalid address or password"}), 404
 
 
 @app.route("/transaction", methods=["POST"])
@@ -51,23 +53,21 @@ def create_transaction():
     payee = request.json.get("payee")
     amount = float(request.json.get("amount"))
     password = request.json.get("password")
+    if (does_wallet_exist(payer) and does_wallet_exist(payee)):
+        payer_balance = (float)(blockchain.get_balance(payer))
+        if payer_balance is None or payer_balance < amount:
+            return jsonify({"error": "Insufficient balance or invalid password"}), 400
+        # Update wallet balances
+        # update_wallet_balance(payer, payer_balance - amount, password)
+        # update_wallet_balance_internal(payee, get_wallet_balance_internal(payee) + amount)
 
-    payer_balance = get_wallet_balance(payer, password)
-    if payer_balance is None or payer_balance < amount:
-        return jsonify({"error": "Insufficient balance or invalid password"}), 400
-
-    if get_wallet_balance_internal(payee) is None:  # Password not required for payee check
-        return jsonify({"error": "Payee wallet not found"}), 404
-
-    # Update wallet balances
-    update_wallet_balance(payer, payer_balance - amount, password)
-    update_wallet_balance_internal(payee, get_wallet_balance_internal(payee) + amount)
-
-    # Add transaction to blockchain
-    transaction = Transaction(amount, payer, payee)
-    blockchain.add_transaction(transaction)
-
-    return jsonify({"message": "Transaction added to pending transactions"})
+        # Add transaction to blockchain
+        # transaction = Transaction(amount, payer, payee)
+        # blockchain.add_transaction(transaction)
+        send_coin(amount, payer, payee, blockchain)
+        return jsonify({"message": "Transaction added to pending transactions"})
+    else:
+        return jsonify({"message": "Transaction failed"}), 400
 
 
 # @app.route("/mine", methods=["GET"])
@@ -76,18 +76,26 @@ def create_transaction():
 #     blockchain.mine_pending_transactions(miner_address)
 #     return jsonify({"message": "Block mined successfully!", "miner": miner_address})
 
+# @app.route("/miner-dashboard", methods=["GET"])
+# def miner_dashboard():
+#     miner_address = request.jsonn.get("miner_address")
+
+
 @app.route("/get-mining-data", methods=["GET"])
 def get_mining_data():
     """API route to provide miners with the latest block data, difficulty, and pending transactions."""
     if not blockchain.pending_transactions:
         return jsonify({"error": "No pending transactions to mine"}), 400
+    retrived_transaction = blockchain.get_transaction_info().__str__()
 
     latest_block = blockchain.chain[-1]
     mining_data = {
         "prev_hash": latest_block.compute_hash(),
-        "transactions": [t.to_dict() for t in blockchain.pending_transactions],
+        "transactions": retrived_transaction,
+        "timestamp": latest_block.timestamp,
         "difficulty": blockchain.difficulty
     }
+    print("retrived transaction info", retrived_transaction)
     return jsonify(mining_data), 200
 
 
@@ -97,7 +105,7 @@ def submit_mined_block():
     data = request.json
 
     # Validate incoming data structure
-    required_fields = ["prev_hash", "transactions", "nonce", "miner_address", "block_hash"]
+    required_fields = ["prev_hash", "transactions", "nonce", "miner_address", "block_hash", "timestamp"]
     if not all(field in data for field in required_fields):
         return jsonify({"error": "Incomplete block data"}), 400
 
@@ -106,17 +114,19 @@ def submit_mined_block():
     nonce = data["nonce"]
     miner_address = data["miner_address"]
     block_hash = data["block_hash"]
-
+    timestamp = data["timestamp"]
     # Reconstruct the block for validation
     try:
-        new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions])
+        new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions], timestamp)
     except Exception as e:
         return jsonify({"error": f"Invalid transaction data: {str(e)}"}), 400
 
     new_block.nonce = nonce
-
+    # print("reconstructed_block", new_block)
     # Recalculate hash for validation
+    print("submitted block hash", block_hash)
     recalculated_hash = new_block.compute_hash()
+    print("recalculate block hash", recalculated_hash)
     if recalculated_hash != block_hash:
         return jsonify({"error": "Block hash does not match the recalculated hash"}), 400
 
@@ -128,10 +138,8 @@ def submit_mined_block():
 
     # Add the block to the blockchain
     blockchain.chain.append(new_block)
-
-    # Reward the miner
-    blockchain.add_transaction(Transaction(1, "network", miner_address))
-
+    blockchain.pop_transaction()
+    blockchain.reward_miner(miner_address)
     return jsonify({"message": "Block added successfully!", "miner_rewarded": miner_address}), 200
 
 if __name__ == '__main__':
