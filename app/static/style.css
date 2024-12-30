@@ -9,6 +9,10 @@ body {
     scroll-behavior: smooth;
 }
 
+div {
+    margin: 0.5rem;
+}
+
 /* Section */
 .section {
     min-height: 100vh;

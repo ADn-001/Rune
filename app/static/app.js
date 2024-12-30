@@ -30,12 +30,18 @@ async function createWallet() {
     const data = await response.json();
 
     if (response.ok) {
-        showCheckWalletForm();
-        const walletOutput = document.getElementById("created-wallet-output");
-        walletOutput.innerHTML = `Wallet created successfully! Address: ${data.address}`;
-        document.getElementById("wallet-input").value = data.address;
-        document.getElementById("wallet-password-input").value = password;
         showWalletCreatedSuccess();
+        showCheckWalletForm();
+        //const walletOutput = document.getElementById("created-wallet-output");
+        // walletOutput.innerHTML = `Wallet created successfully! Address: ${data.address}`;
+        document.getElementById("wallet-input").value = data.address;
+        document.getElementById("wallet-password-input-check").value = password;
+        const wallet_title = document.getElementById("wallet-title");
+        wallet_title.style.display = 'block';
+        document.getElementById('wallet-info').classList.remove('hidden');
+        document.getElementById('wallet-Address').innerHTML = `Address: ${data.address}`;
+        document.getElementById('wallet-info').innerHTML = `${10}`;
+        toggleForm('none', 'wallet-input-form')
         
     } else {
         alert(data.error || "Failed to create wallet");
@@ -125,12 +131,47 @@ async function sendCoins() {
         if (response.ok) {
             // Show transaction success animation
             showTransactionSuccess();
-            // Optionally update the wallet balance after sending coins
-            getWalletBalance();
+            const wallet_response = await fetch(`/wallet/balance`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ address: payerAddress, password: password })
+            });
+            const wallet_data = await wallet_response.json();
+        
+            if (wallet_response.ok) {
+                 const wallet_title = document.getElementById("wallet-title");
+                 wallet_title.style.display = 'block';
+                // //document.getElementById('wallet-info').classList.remove('hidden');
+                document.getElementById('wallet-Address').innerHTML = `Address: ${payerAddress}`;
+                document.getElementById('wallet-info').innerHTML = `${wallet_data.balance-amount}`;
+                toggleForm('none', 'wallet-input-form')
+            } else {
+                document.getElementById('wallet-error').innerHTML = `Something went wrong :(`;
+                alert(data.error || "Failed to retrieve wallet balance.");
+            }
+            
         } else {
             document.getElementById("transaction-info").innerHTML =
                 `Transaction failed: ${data.error || "Unknown error"}`;
         }
+        // const wallet_response = await fetch(`/wallet/balance`, {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify({ address: payerAddress, password: password })
+        // });
+        // const wallet_data = await wallet_response.json();
+    
+        // if (wallet_response.ok) {
+        //      const wallet_title = document.getElementById("wallet-title");
+        //      wallet_title.style.display = 'block';
+        //     // //document.getElementById('wallet-info').classList.remove('hidden');
+        //     document.getElementById('wallet-Address').innerHTML = `Address: ${payerAddress}`;
+        //     document.getElementById('wallet-info').innerHTML = `${wallet_data.balance}`;
+        //     toggleForm('none', 'wallet-input-form')
+        // } else {
+        //     document.getElementById('wallet-error').innerHTML = `Something went wrong :(`;
+        //     alert(data.error || "Failed to retrieve wallet balance.");
+        // }
     } catch (error) {
         document.getElementById("transaction-info").innerHTML =
             `An error occurred: ${error.message}`;
@@ -140,16 +181,16 @@ async function sendCoins() {
 
 // Function to show wallet creation success message with animation
 function showWalletCreatedSuccess() {
-    showSuccessMessage("Wallet Created Successfully!", 'wallet-section');
+    showSuccessMessage("Wallet Created Successfully!", 'wallet-section', "wallet-section", true, "10 Runes added to your wallet as opening bonus!!!");
 }
 
 // Function to show transaction success message with animation
 function showTransactionSuccess() {
-    showSuccessMessage("Transaction Successful!", 'transaction-section');
+    showSuccessMessage("Validating transaction...", 'transaction-section', "wallet-section", true, "transaction sucessful");
 }
 
 // Utility function to show any success message
-function showSuccessMessage(message, parentElementId) {
+function showSuccessMessage(message, parentElementId, destination='wallet-section', addition_popup=false, additional_message='') {
     const parentElement = document.getElementById(parentElementId);
 
     // Prevent duplicate messages
@@ -172,7 +213,10 @@ function showSuccessMessage(message, parentElementId) {
     setTimeout(() => {
         successMessage.classList.remove('success-message-visible');
         setTimeout(() => successMessage.remove(), 300); // Wait for animation
-        document.getElementById('wallet-section').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(destination).scrollIntoView({ behavior: 'smooth' });
+        if(addition_popup) {
+            showSuccessMessage(additional_message, destination)
+        }
     }, 3000);
 }
 
@@ -195,7 +239,7 @@ const walletSection = document.getElementById("wallet-section");
 window.addEventListener('scroll', () => {
     const walletSectionTop = walletSection.offsetTop;
 
-    if (window.scrollY >= walletSectionTop + 100) {
+    if (window.scrollY >= walletSectionTop + 80) {
         navbar.style.display = 'flex'; // Show the navbar
     } else {
         navbar.style.display = 'none'; // Hide the navbar
