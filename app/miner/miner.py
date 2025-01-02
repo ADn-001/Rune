@@ -12,12 +12,54 @@ class MinerConfig:
 def setup_miner():
     config = MinerConfig()
     print("=== Miner Setup ===")
-    #config.node_url = input("Enter the node URL (e.g., http://127.0.0.1:5000): ").strip()
+    # config.node_url = input("Enter the node URL (e.g., http://127.0.0.1:5000 or http://runes): ").strip()
     # config.node_url = "http://" + input("Enter the node URL (e.g., http://127.0.0.1:5000): ").strip()
     # config.miner_address = input("Enter your wallet address: ").strip()
     config.node_url = "http://127.0.0.1:5000"
-    config.miner_address = "xqSEd5IkBJyYUSAN9kjPIaSmhCY"
+    config.miner_address = "5E7nTmeDUPKYQN48ymXlvC6FX2E="
     return config
+
+class Transaction:
+    def __init__(self, amount, payer, payee):
+        self.amount = amount
+        self.payer = payer
+        self.payee = payee
+
+    def to_dict(self):
+        return self.__dict__
+
+    def __str__(self):
+        return json.dumps(self.to_dict())
+
+def json_to_transaction(json_string):
+    # Parse the JSON string into a dictionary
+    data = json.loads(json_string)
+    
+    # Create a Transaction object using the parsed data
+    transaction = Transaction(amount=data['amount'], payer=data['payer'], payee=data['payee'])
+    
+    return transaction
+
+class Transaction:
+    def __init__(self, amount, payer, payee):
+        self.amount = amount
+        self.payer = payer
+        self.payee = payee
+
+    def to_dict(self):
+        return self.__dict__
+
+    def __str__(self):
+        return json.dumps(self.to_dict())
+
+def json_to_transaction(json_string):
+    # Parse the JSON string into a dictionary
+    data = json.loads(json_string)
+    
+    # Create a Transaction object using the parsed data
+    transaction = Transaction(amount=data['amount'], payer=data['payer'], payee=data['payee'])
+    
+    return transaction
 
 # Fetch mining data from the node
 def get_mining_data(config):
@@ -41,13 +83,12 @@ def proof_of_work(difficulty, block):
         return hashlib.md5(block_string).hexdigest()  # Weaken hash function
     nonce = 0
     while True:
-        block["nonce"] = nonce  # Assign current nonce value to the block
-        block_hash = compute_hash(block)  # Compute the hash of the block
-
-        print(f"Nonce: {nonce}, Block hash: {block_hash}")  # Debugging print
-        if block_hash.startswith('0' * difficulty):  # Check if hash meets the difficulty
-            
-            
+        block_data["nonce"] = nonce
+        block_string = json.dumps(block_data, sort_keys=True).encode()
+        print("client side hash compute bock data", block_string)
+        print("client side hash compute bock data", block_string)
+        block_hash = hashlib.sha256(block_string).hexdigest()
+        if block_hash.startswith("0" * difficulty):
             return nonce, block_hash
         nonce += 1  # Increment the nonce if the hash doesn't meet the difficulty
 
@@ -80,7 +121,10 @@ def start_mining(config):
         print("Mining data received. Mining in progress...")
         block_data = {
             "prev_hash": mining_data["prev_hash"],
-            "transactions": mining_data["transactions"],  # Single transaction now
+            "transactions": [json_to_transaction(mining_data["transactions"]).to_dict()],
+            "timestamp": mining_data["timestamp"],
+            "transactions": [json_to_transaction(mining_data["transactions"]).to_dict()],
+            "timestamp": mining_data["timestamp"],
         }
 
         # print("Block data before mining:", block_data)  # Debugging print to check block data
@@ -90,13 +134,13 @@ def start_mining(config):
         block_data["nonce"] = nonce
         block_data["block_hash"] = block_hash  # Include the block hash
         block_data["miner_address"] = config.miner_address
-        # Log nonce and hash
-        print(f"Nonce found: {nonce}")
-        print(f"Block hash after mining: {block_hash}")
-        print("block data:", block_data)
-        print("Block data after mining:", block_data)  # Debugging print to check block data after mining
+        block_data["block_hash"] = block_hash  # Include the block hash
+        block_data["timestamp"] = mining_data["timestamp"]
+        print("submitted mining data", block_data)
+        block_data["block_hash"] = block_hash  # Include the block hash
+        block_data["timestamp"] = mining_data["timestamp"]
+        print("submitted mining data", block_data)
         submit_mined_block(config, block_data)
-
 # Entry point
 if __name__ == "__main__":
     miner_config = setup_miner()
