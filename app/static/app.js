@@ -312,18 +312,18 @@ window.addEventListener('scroll', () => {
 // Hide the navbar initially
 navbar.style.display = 'none';
 
-//drop down menu when crossing max width 
-let menuList = document.getElementById("menuList")
-menuList.style.maxHeight="0px";
+// //drop down menu when crossing max width 
+// let menuList = document.getElementById("menuList")
+// menuList.style.maxHeight="0px";
 
-function toggleMenu(){
-    if(menuList.style.maxHeight=="0px"){
-        menuList.style.maxHeight="300px"
-    }
-    else{
-        menuList.style.maxHeight="0px"
-    }
-}
+// function toggleMenu(){
+//     if(menuList.style.maxHeight=="0px"){
+//         menuList.style.maxHeight="300px"
+//     }
+//     else{
+//         menuList.style.maxHeight="0px"
+//     }
+// }
 
 // Function to toggle the menu
 function toggleMenu() {
