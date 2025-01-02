@@ -302,11 +302,7 @@ const walletSection = document.getElementById("wallet-section");
 window.addEventListener('scroll', () => {
     const walletSectionTop = walletSection.offsetTop;
 
-<<<<<<< HEAD
     if (window.scrollY >= walletSectionTop + 200) {
-=======
-    if (window.scrollY >= walletSectionTop + 80) {
->>>>>>> 527ad5c930aad58c9e38bbb156d70fcae2a311e1
         navbar.style.display = 'flex'; // Show the navbar
     } else {
         navbar.style.display = 'none'; // Hide the navbar
@@ -316,20 +312,19 @@ window.addEventListener('scroll', () => {
 // Hide the navbar initially
 navbar.style.display = 'none';
 
-//drop down menu when crossing max width 
-let menuList = document.getElementById("menuList")
-menuList.style.maxHeight="0px";
+// //drop down menu when crossing max width 
+// let menuList = document.getElementById("menuList")
+// menuList.style.maxHeight="0px";
 
-function toggleMenu(){
-    if(menuList.style.maxHeight=="0px"){
-        menuList.style.maxHeight="300px"
-    }
-    else{
-        menuList.style.maxHeight="0px"
-    }
-}
+// function toggleMenu(){
+//     if(menuList.style.maxHeight=="0px"){
+//         menuList.style.maxHeight="300px"
+//     }
+//     else{
+//         menuList.style.maxHeight="0px"
+//     }
+// }
 
-<<<<<<< HEAD
 // Function to toggle the menu
 function toggleMenu() {
     var menu = document.querySelector('.navbar ul');
@@ -342,5 +337,3 @@ document.addEventListener("scroll", () => {
     const parallaxBg = document.getElementById("parallax-bg");
     parallaxBg.style.transform = `translateY(${scrollY * 0.5}px)`; // Adjust the multiplier (0.5) for parallax intensity
 });
-=======
->>>>>>> 527ad5c930aad58c9e38bbb156d70fcae2a311e1
