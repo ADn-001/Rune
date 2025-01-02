@@ -5,8 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us</title>
     <link rel="stylesheet" href="style.css"> <!-- Update with your CSS file path -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script>
+        // Define variables
+        const scrollspeed = 1.2; // Auto-scroll speed in milliseconds
+        const pauseDuration = 30000; // Pause duration in milliseconds (30 seconds)
+        let scrolling = true; // Flag to control auto-scrolling
+        let scrollInterval; // Interval ID for auto-scrolling
+        let lastScrollPosition = 0; // Tracks the last known scroll position
+        let pauseTimeout; // Timeout ID for pausing auto-scroll
+        // Function to handle automatic scrolling
+        function autoScroll() {
+          if (scrolling) {
+            window.scrollBy(0, scrollspeed); // Scroll down by 1 pixel
+          }
+        }
+    
+        // Function to pause scrolling
+        function pauseScrolling() {
+          scrolling = false; // Stop auto-scrolling
+          clearTimeout(scrollInterval); // Clear the interval
+          clearTimeout(pauseTimeout); // Clear any existing pause timer
+        }
+    
+        // Function to resume scrolling
+        function resumeScrolling() {
+          if (!scrolling) {
+            scrolling = true; // Restart auto-scrolling
+            scrollInterval = setInterval(autoScroll, scrollspeed); // Reinitiate auto-scroll
+          }
+        }
+    
+        // Add event listener to detect user scroll
+        window.addEventListener('scroll', () => {
+          const currentScrollPosition = window.scrollY; // Get current scroll position
+    
+          // Check if user scrolled in the opposite direction
+          if (currentScrollPosition < lastScrollPosition && scrolling) {
+            pauseScrolling(); // Pause auto-scrolling if scrolling upward
+    
+            // Set a timer to resume scrolling after the pause duration
+            pauseTimeout = setTimeout(() => {
+              scrolling = true; // Allow auto-scroll after pause
+            }, pauseDuration);
+          } 
+          
+          // Resume scrolling if the user scrolls in the same direction as the animation
+          else if (currentScrollPosition > lastScrollPosition) {
+            resumeScrolling();
+          }
+    
+          // Update the last scroll position
+          lastScrollPosition = currentScrollPosition;
+        });
+    
+        // Start scrolling when the page loads
+        window.onload = () => {
+          scrollInterval = setInterval(autoScroll, scrollspeed);
+        };
+    </script>
 </head>
 <body>
     <div id="parallax-bg"></div>
@@ -116,7 +174,7 @@
                     Performed research to support project development 
                     and presentation.
                 </p>
-                <h2 id="endcred" href="https://github.com/sally-github-profile" target="_blank">Sally's GitHub</h2>
+                <h2 id="endcred" href="https://github.com/sally-github-profile" target="_blank">Saly's GitHub</h2>
             </div>
             <div class="block3">
                 <h2 id="endcred" style="margin:2%">Project Repository</h2>
@@ -126,7 +184,7 @@
             <div class="block3" style="margin: 35%;"></div>
             </div>
             <div class="block3" style="padding: 6rem; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; margin-top:4%">
-                <div class="image-container" style="margin-bottom: 100%;"><img style="width: 240px; height: 240px; border-radius: 98%; padding: 0%;" src="/assets/runeAnimated.gif" alt="Crypto Logo" class="svg-logo" onclick="home()"></div>
+                <div class="image-container" style="margin-bottom: 100%;"><a href="https://example.com" target="_blank"></a><img style="width: 240px; height: 240px; border-radius: 98%; padding: 0%;" src="/assets/runeAnimated.gif" alt="Crypto Logo" class="svg-logo" onclick="home()"></a></div>
                 <p>click on the coin to go back home</p>
             </div>
             

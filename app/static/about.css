@@ -4,7 +4,7 @@ body {
     padding: 0;
     text-align: center;
     background: radial-gradient(circle at 20% 50%, #0f2027, #203a43, #2c5364); /* Dark space with subtle gradient */
-    background: url('images/background.jpg') no-repeat center center fixed; /* Adjust the URL to point to your image */
+    background: url('images/background.png') no-repeat center center fixed; /* Adjust the URL to point to your image */
     background-size: cover; /* Make sure the image covers the entire screen */
     color: #00ffcc; /* Neon aqua text */
     scroll-behavior: smooth;
@@ -45,9 +45,6 @@ label {
     margin-top: 1rem;
     font-size: 2rem;
     font-weight: bold;
-    text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8);
-    background: linear-gradient(90deg, cyan, #bb96ea); 
-    -webkit-background-clip: text;
 }
 
 div {
@@ -558,7 +555,6 @@ img {
     overflow: hidden;
   }
 
-
 .block2 {
     animation: appear2 linear;
     animation-timeline: view();
@@ -576,8 +572,6 @@ img {
     margin: 2% 3%;
     overflow: hidden;
   }
-
-
 
 .block3 {
     animation: appear3 linear;

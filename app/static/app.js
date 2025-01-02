@@ -94,7 +94,7 @@ async function createWallet() {
         wallet_title.style.display = 'block';
         document.getElementById('wallet-info').classList.remove('hidden');
         document.getElementById('wallet-Address').innerHTML = `Address: ${data.address}`;
-        document.getElementById('wallet-info').innerHTML = `${10}`;
+        document.getElementById('wallet-info').innerHTML = `${10}R`;
         toggleForm('none', 'wallet-input-form')
         
     } else {

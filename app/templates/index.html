@@ -39,15 +39,14 @@
     </div>
 
     <!-- Section 2: Wallet Management -->
-    <div id="wallet-section" class="block2 section hidden">
-        
+    <div id="wallet-section" class="block2 section hidden" style="background-color: rgba(7, 92, 172, 0.3);">
         <img class="icons" style="size: 0.5rem;" src="/assets/wallet_icon.png" alt="A descriptive alt text for the GIF">
-        <h2>Wallet Management</h2>
+        <h2 style="margin-bottom: 1%; margin-top: 1%;">Wallet Management</h2>
         <div>
             <div id="wallet-title" style="display: none;">
                 <div id="wallet-info" style="margin-bottom: 1%; margin-top: 1%; font-size: 5rem; color: gold; background: linear-gradient(90deg, gold, red); -webkit-background-clip: text; color: transparent;"></div>
                 <!-- <div style="margin-bottom: 5%; margin-top: 5%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">RUNES</div> -->
-                <div id="wallet-Address" style="margin-bottom: 25%; margin-top: 5%; font-size: 2rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">
+                <div id="wallet-Address" style="margin-bottom: 3%; margin-top: 1%; font-size: 2rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">
                     <!--wallet address will appear here -->
                 </div>
             </div>
@@ -61,7 +60,7 @@
                     <input type="password" id="wallet-password-input-check" placeholder="password">
                 </div>
                 <button id="checkWalletBtn">Check Wallet</button>
-                <div class="text-button" onclick="showCreateWalletForm()">Don't have a Wallet?</div>
+                <div id="DHW" class="text-button" style="font-size: 1rem;" onclick="showCreateWalletForm()">Don't have a Wallet?</div>
                 <!-- <button id="createWalletBtn">Create New Wallet</button> -->
             </div>
         </div>
@@ -117,8 +116,7 @@
     <div id="mining-section" class=" block2 section hidden">
         <img class="icons" style="size: 0.5rem;" src="/assets/mine.png" alt="A descriptive alt text for the GIF">
         <h2>Mine and earn Runes</h2>
-        <p>Click the button below to download the RunerMiner executable file:</p>
-
+        <p style="text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8); background: linear-gradient(90deg, cyan, #bb96ea); -webkit-background-clip: text;">Click the button below to download the RuneMiner executable file</p>
         <!-- Download Button -->
         <button id="downloadBtn" class="text-button">Download Now</button>
         </div>
