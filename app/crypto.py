@@ -4,8 +4,41 @@ import time
 import os
 import base64
 from flask import jsonify
+from cryptography.fernet import Fernet
 from werkzeug.security import generate_password_hash, check_password_hash
 wallet_data = {}
+# def is_transaction_dict(tx):
+#     """
+#     Checks if a given dictionary is in the format of a Transaction.
+#     :param tx: Dictionary to check.
+#     :return: True if the dictionary has 'amount', 'payer', and 'payee' keys, False otherwise.
+#     """
+#     required_keys = {"amount", "payer", "payee"}
+#     return isinstance(tx, dict) and required_keys.issubset(tx.keys())
+
+
+# def format_transactions(transactions):
+#     """
+#     Ensures that transactions are converted to a list of Transaction objects.
+#     :param transactions: Input transactions, either a list of dictionaries, a single dictionary, or already Transaction objects.
+#     :return: A list of Transaction objects.
+#     """
+#     if isinstance(transactions, list):  # If it's a list, process each element
+#         formatted = []
+#         for tx in transactions:
+#             if isinstance(tx, Transaction):
+#                 formatted.append(tx)
+#             elif is_transaction_dict(tx):
+#                 formatted.append(Transaction(tx["amount"], tx["payer"], tx["payee"]))
+#             else:
+#                 raise ValueError(f"Invalid transaction format: {tx}")
+#         return formatted
+#     elif is_transaction_dict(transactions):  # If it's a single dictionary
+#         return [Transaction(transactions["amount"], transactions["payer"], transactions["payee"])]
+#     elif isinstance(transactions, Transaction):  # If it's already a Transaction object
+#         return [transactions]
+#     else:
+#         raise ValueError(f"Unsupported transaction format: {transactions}")
 
 def is_transaction_dict(tx):
     """
@@ -16,19 +49,25 @@ def is_transaction_dict(tx):
     required_keys = {"amount", "payer", "payee"}
     return isinstance(tx, dict) and required_keys.issubset(tx.keys())
 
-
 def format_transactions(transactions):
     """
     Ensures that transactions are converted to a list of Transaction objects.
-    :param transactions: Input transactions, either a list of dictionaries, a single dictionary, or already Transaction objects.
+    :param transactions: Input transactions, either a list of dictionaries, strings, a single dictionary, or already Transaction objects.
     :return: A list of Transaction objects.
     """
     if isinstance(transactions, list):  # If it's a list, process each element
         formatted = []
         for tx in transactions:
-            if isinstance(tx, Transaction):
+            # Check if the transaction is a string and try to convert it to a dictionary
+            if isinstance(tx, str):
+                try:
+                    tx = json.loads(tx)  # Try to parse the string as JSON
+                except json.JSONDecodeError:
+                    raise ValueError(f"Invalid transaction string format: {tx}")
+
+            if isinstance(tx, Transaction):  # If it's already a Transaction object
                 formatted.append(tx)
-            elif is_transaction_dict(tx):
+            elif is_transaction_dict(tx):  # If it's a dictionary
                 formatted.append(Transaction(tx["amount"], tx["payer"], tx["payee"]))
             else:
                 raise ValueError(f"Invalid transaction format: {tx}")
@@ -75,12 +114,153 @@ class Block:
 
 class Blockchain:
     difficulty = 0
+    BLOCKCHAIN_STORAGE_FILE = "blockchain_storage.json"
+    KEY_FILE = "blockchain_key.key"
+    miner_active = False
+    # def __init__(self):
+    #     self.chain = []
+    #     self.pending_transactions = []
+    #     self.pending_miner_rewards = []
+    #     self.create_genesis_block()
 
     def __init__(self):
-        self.chain = []
-        self.pending_transactions = []
-        self.pending_miner_rewards = []
-        self.create_genesis_block()
+            self.chain = []
+            self.pending_transactions = []
+            self.pending_miner_rewards = []
+            self.encryption_key = self.load_encryption_key()
+            self.cipher = Fernet(self.encryption_key)
+        
+            # Check if a valid blockchain exists
+            if self.is_blockchain_valid():
+                print("Valid blockchain found. Loading...")
+                self.load_blockchain()
+            else:
+                print("No valid blockchain found. Creating a new genesis block...")
+                self.create_genesis_block()
+                self.save_blockchain()
+
+    def load_encryption_key(self):
+        """
+        Loads or generates a valid encryption key for the blockchain.
+        Ensures the key is 32 URL-safe base64-encoded bytes.
+        """
+        if os.path.exists(self.KEY_FILE):
+            with open(self.KEY_FILE, "rb") as file:
+                key = file.read()
+                try:
+                    # Validate the key format
+                    Fernet(key)
+                    return key
+                except ValueError:
+                    print("Invalid key format. Generating a new key...")
+        # If key doesn't exist or is invalid, generate a new one
+        key = Fernet.generate_key()
+        with open(self.KEY_FILE, "wb") as file:
+            file.write(key)
+        return key
+
+    def save_blockchain(self):
+        """
+        Encrypts and saves the blockchain to a file in a proper format.
+        The encrypted blockchain is stored as a base64-encoded string.
+        """
+        try:
+            # Serialize the blockchain as JSON
+            blockchain_data = []
+            for block in self.chain:
+                block_dict = block.__dict__.copy()
+                block_dict['transactions'] = [tx.__dict__ for tx in block.transactions]  # Store transactions as dictionaries
+                blockchain_data.append(block_dict)
+            
+            # Encrypt the serialized blockchain
+            blockchain_data_json = json.dumps(blockchain_data, default=str)
+            encrypted_data = self.cipher.encrypt(blockchain_data_json.encode())
+
+            # Encode the encrypted data to base64 for JSON storage
+            encoded_data = base64.b64encode(encrypted_data).decode('utf-8')
+
+            # Write the encoded data to the file
+            with open(self.BLOCKCHAIN_STORAGE_FILE, "w") as file:
+                json.dump({"blockchain": encoded_data}, file, indent=4)
+            print("Blockchain saved successfully.")
+        except Exception as e:
+            print(f"Error saving blockchain: {e}")
+
+
+    def load_blockchain(self):
+        """
+        Loads and decrypts the blockchain from a file.
+        Ensures the blockchain is properly decoded and restored.
+        """
+        try:
+            if os.path.exists(self.BLOCKCHAIN_STORAGE_FILE):
+                with open(self.BLOCKCHAIN_STORAGE_FILE, "r") as file:
+                    data = json.load(file)
+                    if "blockchain" in data:
+                        # Decode the base64-encoded string
+                        encrypted_data = base64.b64decode(data["blockchain"])
+                        # Decrypt the blockchain data
+                        decrypted_data = self.cipher.decrypt(encrypted_data).decode('utf-8')
+                        blockchain_data = json.loads(decrypted_data)
+                        print("transactions data loaded from load_blockchain method: ", blockchain_data)
+
+                        self.chain = []
+                        for block_data in blockchain_data:
+                            # Deserialize transactions into Transaction objects
+                            transactions = format_transactions(block_data["transactions"])
+
+                            block = Block(
+                                block_data["prev_hash"],
+                                transactions,
+                                block_data["timestamp"],
+                            )
+                            block.nonce = block_data["nonce"]
+                            self.chain.append(block)
+
+                        print("Blockchain loaded successfully.")
+                        return
+            print("No valid blockchain found. A new genesis block will be created.")
+        except Exception as e:
+            print(f"Error loading blockchain: {e}")
+
+
+
+    def is_blockchain_valid(self):
+        """
+        Checks if the blockchain storage file exists, is non-empty, 
+        and contains a valid blockchain structure.
+        """
+        if not os.path.exists(self.BLOCKCHAIN_STORAGE_FILE):
+            print("Blockchain storage file does not exist.")
+            return False
+
+        try:
+            with open(self.BLOCKCHAIN_STORAGE_FILE, "r") as file:
+                data = json.load(file)
+                if "blockchain" not in data:
+                    print("Blockchain data not found in the storage file.")
+                    return False
+
+                # Decode the base64-encoded string
+                encrypted_data = base64.b64decode(data["blockchain"])
+                # Decrypt the blockchain data
+                decrypted_data = self.cipher.decrypt(encrypted_data).decode('utf-8')
+                blockchain_data = json.loads(decrypted_data)
+
+                # Basic validation: Check if blockchain_data is a list of blocks
+                is_valid = all(
+                    "prev_hash" in block and
+                    "transactions" in block and
+                    "timestamp" in block and
+                    "nonce" in block
+                    for block in blockchain_data
+                )
+                if not is_valid:
+                    print("Blockchain structure is invalid.")
+                return is_valid
+        except Exception as e:
+            print(f"Error validating blockchain: {e}")
+            return False
 
     def create_genesis_block(self):
         genesis_transaction = Transaction(100000000000, "genesis", "Rune_Network")
@@ -102,6 +282,8 @@ class Blockchain:
     def add_transaction(self, transaction):
         formatted_transaction = format_transactions(transaction)  # Ensure it's a list of Transaction objects
         self.pending_transactions.extend(formatted_transaction)
+        if not self.miner_active:
+            self.internal_mine()
     def add_miner_rewards(self, transaction):
         formatted_transaction = format_transactions(transaction)  # Ensure it's a list of Transaction objects
         self.pending_miner_rewards.extend(formatted_transaction)
@@ -114,12 +296,22 @@ class Blockchain:
             new_block = Block(self.chain[-1].compute_hash(), transaction)
             new_block.nonce = self.proof_of_work(new_block)
             self.chain.append(new_block)
+            self.save_blockchain()
+
+    def internal_mine(self):
+        """
+        if there are not active miners connected to the network, the netowrk will validate the transaction using this function
+        """
+        print("no miners connected, internal mining operation is being executed")
+        internally_mined_block = Block(self.chain[-1].compute_hash(), format_transactions(self.pending_transactions.pop(0)))
+        internally_mined_block.nonce = self.proof_of_work(internally_mined_block)
+        self.chain.append(internally_mined_block)
 
         self.pending_miner_rewards.clear()
     def get_transaction_info(self):
         """
         Retrieves the first transaction from the pending_transactions list in FIFO order,
-        converts it to a JSON string, and removes it from the list.
+        converts it to a JSON string.
 
         :return: JSON string representation of the transaction if available, otherwise None.
         """
@@ -130,6 +322,9 @@ class Blockchain:
         transaction = self.pending_transactions[0]
         return transaction
     def pop_transaction(self):
+        """
+        removes the first transaction from pending_transactions
+        """
         self.pending_transactions.pop(0)
     def get_balance(self, wallet_address):
         """
@@ -232,6 +427,12 @@ def does_wallet_exist(address):
 def send_coin(amount, payer, payee, blockchain=Blockchain):
     transaction = Transaction(amount, payer, payee)
     blockchain.add_transaction(transaction)
+
+def authenticate_wallet(address, password):
+    if address in wallet_data and check_password_hash(wallet_data[address]["password"], password):
+        return True
+    else:
+       return False
 
 
 # def update_wallet_balance(address, new_balance, password):
