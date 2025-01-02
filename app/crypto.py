@@ -94,7 +94,7 @@ class Transaction:
 
 
 class Block:
-    def __init__(self, prev_hash, transactions):
+    def __init__(self, prev_hash, transactions, timestamp=None):
         self.prev_hash = prev_hash
         self.transactions = transactions  # List of transactions
         self.timestamp = timestamp
