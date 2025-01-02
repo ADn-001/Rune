@@ -1,3 +1,49 @@
+
+async function fetchAboutUs(){
+    try {
+        const response = await fetch('/about', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.text();
+            document.getElementById('content').innerHTML = data;
+        } else {
+            console.error('Failed to fetch the About Us page:', response.status, response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching the About Us page:', error);
+    }
+}
+
+function aboutUs(event) {
+    event.preventDefault(); // Prevent the default link behavior
+    fetchAboutUs(); // Call the function to fetch the "About Us" page
+}
+
+async function home(){
+    try {
+        const response = await fetch('/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.text();
+            document.getElementById('content').innerHTML = data;
+        } else {
+            console.error('Failed to fetch the About Us page:', response.status, response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching the About Us page:', error);
+    }
+}
+
 // Original function: Show wallet section
 function showWalletSection() {
     document.getElementById('wallet-section').classList.remove('hidden');
@@ -6,6 +52,14 @@ function showWalletSection() {
     document.getElementById('transaction-section').classList.add('visible');
     document.getElementById('mining-section').classList.remove('hidden');
     document.getElementById('mining-section').classList.add('visible');
+    const targetSection = document.getElementById('wallet-section')
+        const offset = 200; // Adjust this value to set how much higher the scroll should stop
+        const topPosition = targetSection.getBoundingClientRect().top + window.scrollY - offset;
+
+        window.scrollTo({ 
+            top: topPosition, 
+            behavior: 'smooth' 
+        });
     document.getElementById('wallet-section').scrollIntoView({ behavior: 'smooth' });
     const navbar = document.getElementById('navbar');
     navbar.style.display = 'flex';
@@ -86,7 +140,7 @@ async function getWalletBalance() {
         wallet_title.style.display = 'block';
         //document.getElementById('wallet-info').classList.remove('hidden');
         document.getElementById('wallet-Address').innerHTML = `Address: ${walletAddress}`;
-        document.getElementById('wallet-info').innerHTML = `${data.balance}`;
+        document.getElementById('wallet-info').innerHTML = `${data.balance} R`;
         toggleForm('none', 'wallet-input-form')
     } else {
         document.getElementById('wallet-error').innerHTML = `Something went wrong :(`;
@@ -225,11 +279,20 @@ document.getElementById("sendCoinsBtn").addEventListener("click", sendCoins);
 document.getElementById("createWalletBtn").addEventListener("click", createWallet);
 document.getElementById("checkWalletBtn").addEventListener("click", getWalletBalance);
 // document.getElementById("text-button").addEventListener("click", showCreateWalletForm);
+document.getElementById("downloadBtn").addEventListener("click", function() {
+    window.location.href = "https://drive.google.com/file/d/17rX0M8e61ckTHMpIQF-e0tQI0EdC_c6s/view?usp=sharing"; // Replace with actual file path
+});
 document.querySelectorAll('.navbar a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const targetSection = document.querySelector(this.getAttribute('href'));
-        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const offset = 50; // Adjust this value to set how much higher the scroll should stop
+        const topPosition = targetSection.getBoundingClientRect().top + window.scrollY - offset;
+
+        window.scrollTo({ 
+            top: topPosition, 
+            behavior: 'smooth' 
+        });
     });
 });
 
@@ -239,7 +302,7 @@ const walletSection = document.getElementById("wallet-section");
 window.addEventListener('scroll', () => {
     const walletSectionTop = walletSection.offsetTop;
 
-    if (window.scrollY >= walletSectionTop + 80) {
+    if (window.scrollY >= walletSectionTop + 200) {
         navbar.style.display = 'flex'; // Show the navbar
     } else {
         navbar.style.display = 'none'; // Hide the navbar
@@ -262,3 +325,15 @@ function toggleMenu(){
     }
 }
 
+// Function to toggle the menu
+function toggleMenu() {
+    var menu = document.querySelector('.navbar ul');
+    menu.classList.toggle('active');
+}
+
+
+document.addEventListener("scroll", () => {
+    const scrollY = window.scrollY; // Get the vertical scroll position
+    const parallaxBg = document.getElementById("parallax-bg");
+    parallaxBg.style.transform = `translateY(${scrollY * 0.5}px)`; // Adjust the multiplier (0.5) for parallax intensity
+});

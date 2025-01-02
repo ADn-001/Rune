@@ -1,24 +1,65 @@
 /* Global Styles */
 body {
-    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
-    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); /* Futuristic gradient */
-    color: #00ffc6; /* Neon aqua */
+    background: radial-gradient(circle at 20% 50%, #0f2027, #203a43, #2c5364); /* Dark space with subtle gradient */
+    background: url('images/background.jpg') no-repeat center center fixed; /* Adjust the URL to point to your image */
+    background-size: cover; /* Make sure the image covers the entire screen */
+    color: #00ffcc; /* Neon aqua text */
     scroll-behavior: smooth;
+    overflow-x: hidden; /* Keeps scrolling functionality */
+    -ms-overflow-style: none; /* Hides scrollbar for IE and Edge */
+    scrollbar-width: none; /* Hides scrollbar for Firefox */
+}
+
+body::-webkit-scrollbar {
+    display: none; /* Hides scrollbar for Chrome, Safari, and Edge */
+}
+
+
+#parallax-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/assets/your-image.jpg') no-repeat center center;
+    background-size: cover;
+    z-index: -1; /* Place the background behind all other elements */
+    transform: translateY(0);
+}
+
+body, h2, h3 {
+    font-family: PixelFont2;
+    font-size: 0.5rem;
+}
+
+a {
+    font-family: PixelFont3;
+    font-size: 1.5rem;
+}
+
+label {
+    font-family: PixelFont4;
+    margin-top: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 div {
     margin: 0.5rem;
+    position: relative; /* Ensure sections stay positioned correctly */
+    z-index: 1; /* Place sections above the background */
 }
 
 /* Section */
 .section {
     min-height: 100vh;
     display: flex;
+    padding-top: 4rem;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     transition: opacity 0.5s ease-in-out;
     opacity: 0;
@@ -33,25 +74,27 @@ div {
 }
 
 h1 {
+    font-family: PixelFont2;
     font-size: 4rem;
     color: #00eaff; /* Neon cyan */
-    text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8); /* Neon glow */
-    background: linear-gradient(90deg, #ff007a, #7000ff); /* Futuristic pink-to-purple */
+    /* text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8);  */
+    /* background: linear-gradient(90deg, #ff007a, #7000ff);  */
+    background: linear-gradient(90deg, gold, #7000ff); 
     -webkit-background-clip: text;
     color: transparent;
-}
-label {
-    font-size: 1.5rem;
-    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 p {
-    font-size: 2rem;
+    font-family: PixelFont2;
+    font-size: 1rem;
     font-weight: bold;
+    margin: 0.2rem;
 }
 
 h2 {
-    font-size: 3rem;
+    font-size: 2rem;
     margin-bottom: 20px;
     text-shadow: 0 2px 4px rgba(0, 255, 200, 0.8);
     background: linear-gradient(90deg, #00ffc6, #ff007a); /* Neon aqua-to-pink */
@@ -60,20 +103,22 @@ h2 {
 }
 
 button {
-    padding: 12px 25px;
-    font-size: 18px;
+    font-family: PixelFont2;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: bold;
     margin-top: 20px;
     cursor: pointer;
-    background: linear-gradient(90deg, #00ffcc, #00aaff); /* Neon green-to-blue */
+    background: linear-gradient(90deg, #00ffcc, #00aaff); 
     color: white;
     border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 255, 200, 0.5); /* Neon shadow */
+    border-radius: 3px;
+    box-shadow: 0 4px 8px rgba(0, 255, 200, 0.5);
     transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
 button:hover {
-    background: linear-gradient(90deg, #00aaff, #00ffcc); /* Reverse gradient */
+    background: linear-gradient(90deg, #00aaff, #00ffcc); 
     transform: translateY(-3px);
     box-shadow: 0 6px 12px rgba(0, 255, 200, 0.7);
 }
@@ -89,7 +134,7 @@ input {
     border: 1px solid #00ffc6; /* Neon aqua */
     border-radius: 8px;
     width: 320px;
-    margin-top: 12px;
+    /* margin-top: 12px; */
     outline: none;
     transition: box-shadow 0.3s, border-color 0.3s ease-in-out;
     color: #00eaff; /* Neon cyan */
@@ -101,11 +146,25 @@ input:focus {
     box-shadow: 0 0 10px rgba(255, 0, 122, 0.7);
 }
 
-#wallet-info,
+div#wallet-info  {
+    font-weight: bold;
+    font-size: 2.5rem;
+    margin: 0px;
+    color: #00ffc6; /* Neon aqua */
+}
 #transaction-info {
     font-weight: bold;
+    font-size: 2.5rem;
     margin-top: 20px;
     color: #00ffc6; /* Neon aqua */
+}
+
+#img-walletInfo {
+    width: 120px; /* Resize width */
+    height: 120px; /* Resize height */
+    display: block;
+    border-radius: 98%; /* Matches the container if the image is circular */
+    padding: 0%;
 }
 
 #transaction-success {
@@ -113,74 +172,113 @@ input:focus {
 }
 
 /* Navbar */
-.navbar {
-    position: fixed;
+#navbar {
+    position: sticky;
     top: 0;
-    left: -20px;
     width: 100%;
     background-color: rgba(20, 20, 40, 0.9); /* Transparent dark */
-    padding: 30px;
+     /* padding: 20px; */
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 255, 200, 0.2);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
-.navbar ul {
-    list-style: none;
-    display: flex;
-    padding:0px;
-}
-
-.navbar ul li {
-    margin-top: 10px;
-    margin-left: 16px;
-    margin-right: 16px;
-}
-
-.navbar ul li a {
+/* Navbar links */
+.navbar ul a {
     color: #00ffc6; /* Neon aqua */
     text-decoration: none;
-    font-size: 20px;
+    font-size: 1.5rem;
+    margin: 1rem;
     transition: color 0.3s ease;
 }
 
-.navbar ul li a:hover {
+/* Navbar link hover effect */
+.navbar a:hover {
     color: #ff007a; /* Neon pink */
 }
 
-.menu-icon{
-    display: none;
+/* Hide the toggle button initially (for large screens) */
+
+
+/* Mobile menu list (hidden by default) */
+.navbar ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    flex-direction: row;
 }
 
-.menu-icon i{
+.navbar a.logo {
+    margin:0;
+}
+
+/* Menu items on mobile screen (when active) */
+.navbar ul.active {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: rgba(20, 20, 40, 0.9); /* Background for mobile menu */
+    box-shadow: 0 2px 5px rgba(0, 255, 200, 0.2);
+}
+
+/* Style toggle icon (hamburger menu) */
+a#nav-toggle-btn.fa-solid.fa-bars span {
     color: #00ffc6;
-    font-size: 30px;
+    font-size: 2rem;
+    cursor: pointer;
+    background-color: #7000ff;
+    border-color: #7000ff;
+    border-width: 0.5rem;
+    margin: 0;
+
 }
 
-@media (max-width:600px) {
-    nav ul{
-        position: absolute;
-        top: 50px;
-        left:-10px;
-        right: 0;
-        flex-direction: column;
-        text-align: center;
-        background: rgba(20, 20, 40, 0.9); 
-        gap:0;
-        overflow: hidden;
-
-    }
+/* Media query for screens less than 600px */
+@media (max-width: 600px) {
+    /* Hide the navbar links by default on small screens */
     
+    .svg-logo{
+        display: none;
+    }
 
-    .menu-icon{
+    .navbar a{
+        margin: 1rem;
+    }
+    /* Show the toggle button */
+  #nav-toggle-btn.fa-solid.fa-bars {
         display: block;
+        font-size: 2rem;
     }
-    
-    #menuList{
-        transition: all 0.5s;
-        padding: 10px;
+
+    /* Hide the navbar list by default */
+    .navbar ul {
+        display: none;
+        flex-direction: column;
+
+        width: 100%;
+    }
+
+    /* When active, show the navbar list */
+    .navbar ul.active {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+}
+
+/* Media query for screens greater than 600px */
+@media (min-width: 601px) {
+    /* Hide the toggle button */
+    #nav-toggle-btn.fa-solid.fa-bars {
+        display: none;
     }
 }
 
@@ -228,14 +326,14 @@ input:focus {
     }
 }
 
-.logo-container {
+/* .logo-container {
     margin: 30px auto;
-}
+} */
 
 .svg-logo {
-    width: 250px;
+    width: 3rem;
     height: auto;
-    margin-bottom: 40px;
+    overflow: hidden;
 }
 
 /* Success message animation styles */
@@ -264,12 +362,241 @@ body {
 .text-button {
     margin-top: 3%;
     background: none;
+    font-family: PixelFont2;
     border: none;
     color: linear-gradient(90deg, #c300ff, #f55555);;
-    text-decoration: underline;
+    /* text-decoration: underline; */
     cursor: pointer;
     font-size: 22px;
   }
-  .text-button:hover {
+.text-button:hover {
     color: linear-gradient(90deg, #c300ff, #f55555);;
   }
+
+.image-container {
+    display: inline-block;
+    padding: 20px; /* Space between image and glow  */
+    border-radius: 50%; /* Ensures the glow is circular if the image is round */
+    background-color: transparent; /* Optional: transparent background */
+    /* box-shadow: 0 0 15px #8000ff, 
+                0 0 30px #a020f0, 
+                0 0 60px #c040ff, 
+                0 0 100px #e080ff; */
+    box-shadow: 0 0 15px gold, 
+                0 0 30px orange, 
+                0 0 60px #c040ff, 
+                0 0 100px cyan; 
+    animation: float 4s ease-in-out infinite;
+}
+
+.logo-container {
+    display: inline-block;
+    /* padding: 20px;  Space between image and glow */ 
+    border-radius: 90%; /* Ensures the glow is circular if the image is round */
+    background-color: transparent; /* Optional: transparent background */
+    /* box-shadow: 0 0 15px #8000ff, 
+                0 0 30px #a020f0, 
+                0 0 60px #c040ff, 
+                0 0 100px #e080ff; */
+    box-shadow: 0 0 15px gold, 
+                0 0 30px orange, 
+                0 0 60px #c040ff, 
+                0 0 100px cyan; 
+}
+
+img {
+    width: 240px; /* Resize width */
+    height: 240px; /* Resize height */
+    display: block;
+    border-radius: 98%; /* Matches the container if the image is circular */
+    padding: 0%;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    align-content: center;
+    justify-content: center;
+}
+
+@font-face {
+    font-family: 'PixelFontIn';
+    src: url('fonts/8-bit Arcade In.woff2')format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PixelFontOut';
+    src: url('fonts/8-bit Arcade Out.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PixelFont2';
+    src: url('fonts/8-bit-pusab.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PixelFont3';
+    src: url('fonts/ka1.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PixelFont4';
+    src: url('fonts/Kemco Pixel Bold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@keyframes appear1 {
+    from {
+        opacity: 0;
+        transform: translateX(-400px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+  }
+
+@keyframes appear2 {
+    from {
+        opacity: 0;
+        transform: translateY(400px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+  }
+
+@keyframes appear3 {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+        transform: scale(1.5);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+        transform: scale(1);
+    }
+  }
+
+@keyframes appear4 {
+    from {
+        opacity: 1;
+        transform: translateY(0px);
+        transform: scale(1);
+    }
+    to {
+        opacity: 0.5;
+        transform: translateY(-200px);
+        transform: scale(0);
+    }
+  }
+
+.block1 {
+    animation: appear1 linear;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 32, 39, 0.8),  /* Dark color with 80% opacity */
+        rgba(32, 58, 67, 0.8),  /* Mid color with 80% opacity */
+        rgba(44, 83, 100, 0.8)  /* Light color with 80% opacity */
+    );
+    background-size: cover;
+    color: #00ffc6; /* Neon aqua */
+    padding: 3rem; /* Space around the content */
+    border-radius: 5%; /* Optional: Rounded corners */
+    margin: 2% 3%;
+    overflow: hidden;
+  }
+
+.block2 {
+    animation: appear2 linear;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 32, 39, 0.8),  /* Dark color with 80% opacity */
+        rgba(32, 58, 67, 0.8),  /* Mid color with 80% opacity */
+        rgba(44, 83, 100, 0.8)  /* Light color with 80% opacity */
+    );
+    background-size: cover;
+    color: #00ffc6; /* Neon aqua */
+    padding: 3rem; /* Space around the content */
+    border-radius: 5%; /* Optional: Rounded corners */
+    margin: 2% 3%;
+    overflow: hidden;
+  }
+
+.block3 {
+    animation: appear3 linear;
+    animation-timeline: view();
+    animation-range: entry 20% cover 40%;
+    animation: appear4 linear;
+    animation-timeline: view();
+    animation-range: entry 100% cover 120%;
+    color: gold;
+    padding: 0.5rem; /* Space around the content */
+    margin: 2% 8%;
+    overflow: hidden;
+  }
+
+.block4 {
+    animation: appear4 linear;
+    animation-timeline: view();
+    animation-range: exit 0% cover 55%;
+    color: gold;
+    padding: 0.5rem; /* Space around the content */
+    margin: 2% 8%;
+    overflow: hidden;
+  }
+
+h1.block3 {
+    font-family: PixelFont4;
+    color: goldenrod;
+    font-weight: lighter;
+}
+
+#endcred {
+    font-family: PixelFont4;
+    color: gold;
+    font-weight: lighter;
+    text-shadow: none;
+    margin-top: 8px;
+}
+
+img.icons {
+    border-radius: 1%;
+    animation: float 4s ease-in-out infinite;
+}
+
+.floating-image {
+    width: 200px;
+    height: 200px;
+    background-image: url('https://via.placeholder.com/200'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}

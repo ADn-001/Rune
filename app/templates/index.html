@@ -9,22 +9,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <div id="parallax-bg"></div>
     <nav id="navbar" class="navbar">
-        <ul id="menuList">
-            <li><a href="#welcome-section"><img src="path-to-your-logo.png" alt="Crypto Logo" class="svg-logo"></a></li>
-            <li><a href="#welcome-section">Home</a></li>
-            <li><a href="#wallet-section">Wallet</a></li>
-            <li><a href="#transaction-section">Send Coin</a></li>
-            <li><a href="#mining-section">Mining</a></li>
+        <div class="logo-container"><img  src="/assets/runeAnimated.gif" alt="Crypto Logo" class="svg-logo" onclick="home()"></div>
+        <ul>
+            <a href="#welcome-section">Home</a>
+            <a href="#wallet-section">Wallet</a>
+            <a href="#transaction-section">Send Coins</a>
+            <a href="#mining-section">Mining</a>
+            <a href="/about" onclick="aboutUs(event)">About Us</a>
         </ul>
-
-        <div class="menu-icon">
-            <i class="fa-solid fa-bars" onclick="toggleMenu()"></i> 
-        </div>
-
-    </nav>
-
-    
+        <a id="nav-toggle-btn" class="fa-solid fa-bars" onclick="toggleMenu()"></a>
+    </nav> 
 <script src="https://kit.fontawesome.com/f8e1a98484.js" crossorigin="anonymous"></script>
 
     <!-- Logo Section (Optional) -->
@@ -34,20 +30,23 @@
 
     <!-- Section 1: Welcome -->
     <div id="welcome-section" class="section visible">
+        <div class="image-container">
+            <img  style="size: 0.5rem;" src="/assets/runeAnimated.gif" alt="A descriptive alt text for the GIF">
+        </div>
         <h1>RUNE</h1>
-        <p>Welcome</p>
-        <button onclick="showWalletSection()">Get Started</button>
+        <p style="font-size: 1.5rem;">Welcome</p>
+        <button class="text-button" onclick="showWalletSection()">Get Started</button>
     </div>
 
     <!-- Section 2: Wallet Management -->
-    <div id="wallet-section" class="section hidden">
+    <div id="wallet-section" class="block2 section hidden">
+        
+        <img class="icons" style="size: 0.5rem;" src="/assets/wallet_icon.png" alt="A descriptive alt text for the GIF">
         <h2>Wallet Management</h2>
         <div>
             <div id="wallet-title" style="display: none;">
-                <div style="margin-bottom: 5%; margin-top: 5%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">RUNES</div>
-                <div id="wallet-info" style="margin-bottom: 5%; margin-top: 5%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">
-                    <!-- <h1 style="margin-bottom: 25%; margin-top: 15%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">RUNE</h1> -->
-                </div>
+                <div id="wallet-info" style="margin-bottom: 1%; margin-top: 1%; font-size: 5rem; color: gold; background: linear-gradient(90deg, gold, red); -webkit-background-clip: text; color: transparent;"></div>
+                <!-- <div style="margin-bottom: 5%; margin-top: 5%; font-size: 3rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">RUNES</div> -->
                 <div id="wallet-Address" style="margin-bottom: 25%; margin-top: 5%; font-size: 2rem; color: gold; text-shadow: 0 3px 5px rgba(239, 220, 153, 0.94); background: linear-gradient(90deg, orange, red); -webkit-background-clip: text; color: transparent;">
                     <!--wallet address will appear here -->
                 </div>
@@ -86,7 +85,8 @@
     </div>
 
     <!-- Section 3: Send Coins -->
-    <div id="transaction-section" class="section hidden">
+    <div id="transaction-section" class=" block1 section hidden">
+        <img class="icons" style="size: 0.5rem;" src="/assets/money_send.png" alt="A descriptive alt text for the GIF">
         <h2>Send Coins</h2>
         <!-- <div>
             <label for="payer-wallet-input">Payer Wallet Address:</label>
@@ -114,11 +114,16 @@
     </div>
 
     <!-- Section 4: Mining -->
-    <div id="mining-section" class="section hidden">
-        <h2>Mining in Progress...</h2>
-        <p>Transaction is being processed. Coins sent successfully!</p>
-    </div>
+    <div id="mining-section" class=" block2 section hidden">
+        <img class="icons" style="size: 0.5rem;" src="/assets/mine.png" alt="A descriptive alt text for the GIF">
+        <h2>Mine and earn Runes</h2>
+        <p>Click the button below to download the RunerMiner executable file:</p>
 
+        <!-- Download Button -->
+        <button id="downloadBtn" class="text-button">Download Now</button>
+        </div>
+
+    <!-- <script src="{{ url_for('static', filename='app.js') }}"></script> -->
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@ class MinerConfig:
 def setup_miner():
     config = MinerConfig()
     print("=== Miner Setup ===")
-    #config.node_url = input("Enter the node URL (e.g., http://127.0.0.1:5000): ").strip()
+    # config.node_url = input("Enter the node URL (e.g., http://127.0.0.1:5000 or http://runes): ").strip()
     # config.node_url = "http://" + input("Enter the node URL (e.g., http://127.0.0.1:5000): ").strip()
     # config.miner_address = input("Enter your wallet address: ").strip()
     config.node_url = "http://127.0.0.1:5000"
@@ -94,7 +94,6 @@ def start_mining(config):
         block_data["timestamp"] = mining_data["timestamp"]
         print("submitted mining data", block_data)
         submit_mined_block(config, block_data)
-
 # Entry point
 if __name__ == "__main__":
     miner_config = setup_miner()
