@@ -175,6 +175,7 @@ div#wallet-info  {
 #navbar {
     position: sticky;
     top: 0;
+    left: -20px;
     width: 100%;
     background-color: rgba(20, 20, 40, 0.9); /* Transparent dark */
      /* padding: 20px; */

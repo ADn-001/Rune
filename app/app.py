@@ -30,6 +30,7 @@ def create_wallet_route():
         return jsonify({"error": "Password is required"}), 400
 
     address = create_wallet_with_address(password, blockchain)
+    address = create_wallet_with_address(password, blockchain)
     if address:
         return jsonify({"message": "Wallet created successfully!", "address": address}), 201
     else:
@@ -49,6 +50,12 @@ def get_wallet_info_route(address):
 def get_balance():
     address = request.json.get("address")
     password = request.json.get("password")
+    if (does_wallet_exist(address)):
+        balance = get_wallet_balance(address, password, blockchain)
+        if balance is not None:
+            return jsonify({"address": address, "balance": balance})
+        else:
+            return jsonify({"error": "Invalid address or password"}), 404
     if (does_wallet_exist(address)):
         balance = get_wallet_balance(address, password, blockchain)
         if balance is not None:
@@ -113,14 +120,18 @@ def get_mining_data():
     if not blockchain.pending_transactions:
         return jsonify({"error": "No pending transactions to mine"}), 400
     retrived_transaction = blockchain.get_transaction_info().__str__()
+    retrived_transaction = blockchain.get_transaction_info().__str__()
 
     latest_block = blockchain.chain[-1]
     mining_data = {
         "prev_hash": latest_block.compute_hash(),
         "transactions": retrived_transaction,
         "timestamp": latest_block.timestamp,
+        "transactions": retrived_transaction,
+        "timestamp": latest_block.timestamp,
         "difficulty": blockchain.difficulty
     }
+    print("retrived transaction info", retrived_transaction)
     print("retrived transaction info", retrived_transaction)
     return jsonify(mining_data), 200
 
@@ -131,6 +142,7 @@ def submit_mined_block():
     data = request.json
 
     # Validate incoming data structure
+    required_fields = ["prev_hash", "transactions", "nonce", "miner_address", "block_hash", "timestamp"]
     required_fields = ["prev_hash", "transactions", "nonce", "miner_address", "block_hash", "timestamp"]
     if not all(field in data for field in required_fields):
         return jsonify({"error": "Incomplete block data"}), 400
@@ -147,14 +159,18 @@ def submit_mined_block():
     # Reconstruct the block for validation
     try:
         new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions], timestamp)
+        new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions], timestamp)
     except Exception as e:
         return jsonify({"error": f"Invalid transaction data: {str(e)}"}), 400
 
     new_block.nonce = nonce
     # print("reconstructed_block", new_block)
+    # print("reconstructed_block", new_block)
     # Recalculate hash for validation
     print("submitted block hash", block_hash)
+    print("submitted block hash", block_hash)
     recalculated_hash = new_block.compute_hash()
+    print("recalculate block hash", recalculated_hash)
     print("recalculate block hash", recalculated_hash)
     if recalculated_hash != block_hash:
         return jsonify({"error": "Block hash does not match the recalculated hash"}), 400
