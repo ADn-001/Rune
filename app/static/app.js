@@ -288,7 +288,7 @@ document.getElementById("createWalletBtn").addEventListener("click", createWalle
 document.getElementById("checkWalletBtn").addEventListener("click", getWalletBalance);
 // document.getElementById("text-button").addEventListener("click", showCreateWalletForm);
 document.getElementById("downloadBtn").addEventListener("click", function() {
-    window.location.href = "https://drive.google.com/file/d/17rX0M8e61ckTHMpIQF-e0tQI0EdC_c6s/view?usp=sharing"; // Replace with actual file path
+    window.location.href = "https://drive.google.com/file/d/1bN18iRbdqtcoBHmLhgt9G5fehxgYRD7F/view?usp=drive_link"; // Replace with actual file path
 });
 document.querySelectorAll('.navbar a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
