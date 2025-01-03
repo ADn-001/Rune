@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from crypto import Blockchain, Transaction, create_wallet_with_address, does_wallet_exist, get_wallet_balance, send_coin, authenticate_wallet, Block
 
@@ -162,5 +163,6 @@ def submit_mined_block():
     return jsonify({"message": "Block added successfully!", "miner_rewarded": miner_address}), 200
 
 if __name__ == '__main__':
-     app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Default to port 5000 if PORT is not set
+    app.run(host='0.0.0.0', port=port)
 
