@@ -7,38 +7,6 @@ from flask import jsonify
 from cryptography.fernet import Fernet
 from werkzeug.security import generate_password_hash, check_password_hash
 wallet_data = {}
-# def is_transaction_dict(tx):
-#     """
-#     Checks if a given dictionary is in the format of a Transaction.
-#     :param tx: Dictionary to check.
-#     :return: True if the dictionary has 'amount', 'payer', and 'payee' keys, False otherwise.
-#     """
-#     required_keys = {"amount", "payer", "payee"}
-#     return isinstance(tx, dict) and required_keys.issubset(tx.keys())
-
-
-# def format_transactions(transactions):
-#     """
-#     Ensures that transactions are converted to a list of Transaction objects.
-#     :param transactions: Input transactions, either a list of dictionaries, a single dictionary, or already Transaction objects.
-#     :return: A list of Transaction objects.
-#     """
-#     if isinstance(transactions, list):  # If it's a list, process each element
-#         formatted = []
-#         for tx in transactions:
-#             if isinstance(tx, Transaction):
-#                 formatted.append(tx)
-#             elif is_transaction_dict(tx):
-#                 formatted.append(Transaction(tx["amount"], tx["payer"], tx["payee"]))
-#             else:
-#                 raise ValueError(f"Invalid transaction format: {tx}")
-#         return formatted
-#     elif is_transaction_dict(transactions):  # If it's a single dictionary
-#         return [Transaction(transactions["amount"], transactions["payer"], transactions["payee"])]
-#     elif isinstance(transactions, Transaction):  # If it's already a Transaction object
-#         return [transactions]
-#     else:
-#         raise ValueError(f"Unsupported transaction format: {transactions}")
 
 def is_transaction_dict(tx):
     """
@@ -94,7 +62,7 @@ class Transaction:
 
 
 class Block:
-    def __init__(self, prev_hash, transactions, timestamp=None):
+    def __init__(self, prev_hash, transactions, timestamp=time.time()):
         self.prev_hash = prev_hash
         self.transactions = transactions  # List of transactions
         self.timestamp = timestamp
@@ -113,15 +81,10 @@ class Block:
         return hashlib.sha256(block_string).hexdigest()
 
 class Blockchain:
-    difficulty = 0
+    difficulty = 2
     BLOCKCHAIN_STORAGE_FILE = "blockchain_storage.json"
     KEY_FILE = "blockchain_key.key"
     miner_active = False
-    # def __init__(self):
-    #     self.chain = []
-    #     self.pending_transactions = []
-    #     self.pending_miner_rewards = []
-    #     self.create_genesis_block()
 
     def __init__(self):
             self.chain = []
@@ -202,7 +165,6 @@ class Blockchain:
                         # Decrypt the blockchain data
                         decrypted_data = self.cipher.decrypt(encrypted_data).decode('utf-8')
                         blockchain_data = json.loads(decrypted_data)
-                        print("transactions data loaded from load_blockchain method: ", blockchain_data)
 
                         self.chain = []
                         for block_data in blockchain_data:
@@ -395,7 +357,6 @@ def create_wallet_with_address(password, blockchain=Blockchain):
         "password": hashed_password  # Store hashed password
     }
     save_wallets(wallet_data)  # Save to persistent storage
-    # blockchain.add_transaction(Transaction(10, "Rune_Network", address))
     send_coin(10, "Rune_Network", address, blockchain)
     return address
 
@@ -433,22 +394,3 @@ def authenticate_wallet(address, password):
         return True
     else:
        return False
-
-
-# def update_wallet_balance(address, new_balance, password):
-#     """Update the balance of a wallet after verifying the password."""
-#     if address in wallet_data and check_password_hash(wallet_data[address]["password"], password):
-#         wallet_data[address]["balance"] = new_balance
-#         save_wallets(wallet_data)  # Save updated wallet data to persistent storage
-#         return jsonify({"message": "Wallet balance updated successfully"})
-#     else:
-#         return jsonify({"error": "Wallet not found or incorrect password"}), 404
-
-# def update_wallet_balance_internal(address, new_balance):
-#     """Update the balance of payee."""
-#     if address in wallet_data:
-#         wallet_data[address]["balance"] = new_balance
-#         save_wallets(wallet_data)  # Save updated wallet data to persistent storage
-#         return jsonify({"message": "Wallet balance updated successfully"})
-#     else:
-#         return jsonify({"error": "Wallet not found"}), 404

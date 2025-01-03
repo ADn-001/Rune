@@ -14,7 +14,7 @@ def serve_assets(filename):
 
 @app.route('/about')
 def about():
-    return render_template('about.html')  # Ensure 'about.html' is in the templates folder
+    return render_template('about.html')
 
 @app.route("/")
 def home():
@@ -90,29 +90,6 @@ def create_transaction():
         return jsonify({"message": "invalid password"}), 400
 
 
-# @app.route("/mine", methods=["GET"])
-# def mine():
-#     miner_address = request.args.get("miner")
-#     blockchain.mine_pending_transactions(miner_address)
-#     return jsonify({"message": "Block mined successfully!", "miner": miner_address})
-
-# # Handle the 'check-miner' event triggered by the frontend
-# @socketio.on('check-miner')
-# def check_miner_address(minerAddress):
-#     print(f"Checking miner address: {minerAddress}")
-    
-#     # Check if the provided miner address exists in the list of valid addresses
-#     if minerAddress in connected_miners:
-#         response = {"status": "success"}
-#         print(f"miner address found: {minerAddress}")
-#     else:
-#         response = {"status": "error"}
-
-#     # Send the response back to the frontend
-#     emit('miner-status', response)
-
-
-
 @app.route("/get-mining-data", methods=["GET"])
 def get_mining_data():
     blockchain.miner_active = True
@@ -131,8 +108,6 @@ def get_mining_data():
         "timestamp": latest_block.timestamp,
         "difficulty": blockchain.difficulty
     }
-    print("retrived transaction info", retrived_transaction)
-    print("retrived transaction info", retrived_transaction)
     return jsonify(mining_data), 200
 
 
@@ -164,13 +139,9 @@ def submit_mined_block():
         return jsonify({"error": f"Invalid transaction data: {str(e)}"}), 400
 
     new_block.nonce = nonce
-    # print("reconstructed_block", new_block)
-    # print("reconstructed_block", new_block)
     # Recalculate hash for validation
     print("submitted block hash", block_hash)
-    print("submitted block hash", block_hash)
     recalculated_hash = new_block.compute_hash()
-    print("recalculate block hash", recalculated_hash)
     print("recalculate block hash", recalculated_hash)
     if recalculated_hash != block_hash:
         return jsonify({"error": "Block hash does not match the recalculated hash"}), 400
@@ -187,11 +158,6 @@ def submit_mined_block():
     blockchain.reward_miner(miner_address)
     blockchain.miner_active = False
     blockchain.save_blockchain()
-    # socketio.emit('update_miner_dash', {
-    #     'miner_address': miner_address,
-    #     'block_hash': block_hash,
-    #     'timestamp': timestamp
-    # })
 
     return jsonify({"message": "Block added successfully!", "miner_rewarded": miner_address}), 200
 

@@ -45,6 +45,9 @@ label {
     margin-top: 1rem;
     font-size: 2rem;
     font-weight: bold;
+    text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8);
+    background: linear-gradient(90deg, cyan, #bb96ea); 
+    -webkit-background-clip: text;
 }
 
 div {
@@ -241,69 +244,6 @@ a#nav-toggle-btn.fa-solid.fa-bars span {
 
 }
 
-/* Media query for screens less than 600px */
-@media (max-width: 700px) {
-    /* Hide the navbar links by default on small screens */
-    
-    .svg-logo{
-        display: none;
-    }
-
-    .navbar a{
-        margin: 1rem;
-    }
-    /* Show the toggle button */
-  #nav-toggle-btn.fa-solid.fa-bars {
-        display: block;
-        font-size: 2rem;
-    }
-
-    /* Hide the navbar list by default */
-    .navbar ul {
-        display: none;
-        flex-direction: column;
-
-        width: 100%;
-    }
-
-    /* When active, show the navbar list */
-    .navbar ul.active {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-    }
-}
-
-/* Media query for screens greater than 600px */
-@media (min-width: 701px) {
-    /* Hide the toggle button */
-    #nav-toggle-btn.fa-solid.fa-bars {
-        display: none;
-    }
-}
-
-/* Media query for screens greater than 600px */
-@media (max-width: 1100) {
-    p {
-        font-size: 0.25rem;
-        margin: 0.2rem;
-    }
-    
-    h2 {
-        font-size: 0.5rem;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    div#wallet-info  {
-        font-weight: lighter;
-        font-size: 70%;
-    }
-}
-
 /* Success Messages */
 .success-message {
     font-size: 1.5rem;
@@ -333,6 +273,7 @@ a#nav-toggle-btn.fa-solid.fa-bars span {
         transform: translateX(0);
     }
 }
+
 
 .transaction-success, .wallet-success {
     display: none;
@@ -555,6 +496,7 @@ img {
     overflow: hidden;
   }
 
+
 .block2 {
     animation: appear2 linear;
     animation-timeline: view();
@@ -572,6 +514,8 @@ img {
     margin: 2% 3%;
     overflow: hidden;
   }
+
+
 
 .block3 {
     animation: appear3 linear;
@@ -641,4 +585,14 @@ img.icons {
     50% {
         transform: translateY(-20px);
     }
+}
+
+#url {
+    font-size:250%;
+    font-family: PixelFont4;
+    font-weight: bold; 
+    color: white;
+    text-shadow: 0 3px 5px rgba(0, 255, 200, 0.8);
+    /* background: linear-gradient(90deg, cyan, #bb96ea);  */
+    -webkit-background-clip: text;
 }

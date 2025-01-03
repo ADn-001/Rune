@@ -13,11 +13,8 @@ class MinerConfig:
 def setup_miner():
     config = MinerConfig()
     print("=== Miner Setup ===")
-    # config.node_url = input("Enter the node URL (e.g., http://127.0.0.1:5000 or http://runes): ").strip()
-    # config.node_url = "http://" + input("Enter the node URL (e.g., http://127.0.0.1:5000): ").strip()
-    # config.miner_address = input("Enter your wallet address: ").strip()
-    config.node_url = "http://127.0.0.1:5000"
-    config.miner_address = "5E7nTmeDUPKYQN48ymXlvC6FX2E="
+    config.node_url = input("Enter the node URL (e.g., http://127.0.0.1:5000 or http://runes): ").strip()
+    config.miner_address = input("Enter your wallet address: ").strip()
     return config
 
 class Transaction:
@@ -78,7 +75,6 @@ def proof_of_work(block_data, difficulty):
         block_data["nonce"] = nonce
         block_string = json.dumps(block_data, sort_keys=True).encode()
         print("client side hash compute bock data", block_string)
-        print("client side hash compute bock data", block_string)
         block_hash = hashlib.sha256(block_string).hexdigest()
         if block_hash.startswith("0" * difficulty):
             return nonce, block_hash
@@ -119,7 +115,6 @@ def start_mining(config):
         print("submitted mining data", block_data)
         block_data["block_hash"] = block_hash  # Include the block hash
         block_data["timestamp"] = mining_data["timestamp"]
-        print("submitted mining data", block_data)
         submit_mined_block(config, block_data)
 # Entry point
 if __name__ == "__main__":

@@ -1,21 +1,29 @@
 
-async function fetchAboutUs(){
-    try {
-        const response = await fetch('/about', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+// async function fetchAboutUs(){
+//     try {
+//         const response = await fetch('/about', {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         });
 
-        if (response.ok) {
-            const data = await response.text();
-            document.getElementById('content').innerHTML = data;
-        } else {
-            console.error('Failed to fetch the About Us page:', response.status, response.statusText);
-        }
-    } catch (error) {
-        console.error('Error fetching the About Us page:', error);
+//         if (response.ok) {
+//             const data = await response.text();
+//             document.getElementById('content').innerHTML = data;
+//         } else {
+//             console.error('Failed to fetch the About Us page:', response.status, response.statusText);
+//         }
+//     } catch (error) {
+//         console.error('Error fetching the About Us page:', error);
+//     }
+// }
+
+function switchPage(page) {
+    if (page === 'index') {
+        window.location.href = '/';  // Redirect to the index page
+    } else if (page === 'about') {
+        window.location.href = '/about';  // Redirect to the about page
     }
 }
 
@@ -197,7 +205,7 @@ async function sendCoins() {
                  wallet_title.style.display = 'block';
                 // //document.getElementById('wallet-info').classList.remove('hidden');
                 document.getElementById('wallet-Address').innerHTML = `Address: ${payerAddress}`;
-                document.getElementById('wallet-info').innerHTML = `${wallet_data.balance-amount}`;
+                document.getElementById('wallet-info').innerHTML = `${wallet_data.balance-amount}R`;
                 toggleForm('none', 'wallet-input-form')
             } else {
                 document.getElementById('wallet-error').innerHTML = `Something went wrong :(`;
