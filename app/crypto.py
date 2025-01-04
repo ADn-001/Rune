@@ -358,6 +358,7 @@ def create_wallet_with_address(password, blockchain=Blockchain):
     }
     save_wallets(wallet_data)  # Save to persistent storage
     send_coin(10, "Rune_Network", address, blockchain)
+    blockchain.internal_mine()
     return address
 
 
