@@ -68,40 +68,39 @@ def create_transaction():
     payee = request.json.get("payee")
     amount = float(request.json.get("amount"))
     password = request.json.get("password")
-    if authenticate_wallet(payer, password):
-        if (does_wallet_exist(payer) and does_wallet_exist(payee)):
-            payer_balance = (float)(blockchain.get_balance(payer))
-            if payer_balance is None or payer_balance < amount:
-                return jsonify({"error": "Insufficient balance or invalid password"}), 400
-            # Update wallet balances
-            # update_wallet_balance(payer, payer_balance - amount, password)
-            # update_wallet_balance_internal(payee, get_wallet_balance_internal(payee) + amount)
-
-            # Add transaction to blockchain
-            # transaction = Transaction(amount, payer, payee)
-            # blockchain.add_transaction(transaction)
-            send_coin(amount, payer, payee, blockchain)
-            return jsonify({"message": "Transaction added to pending transactions"})
-        else:
-            return jsonify({"message": "Transaction failed"}), 400
+    if(payer==payee):
+        return jsonify({"message": "you are not allowed to send runes to yourself"}), 400
     else:
-        return jsonify({"message": "invalid password"}), 400
+        if authenticate_wallet(payer, password):
+            if (does_wallet_exist(payer) and does_wallet_exist(payee)):
+                payer_balance = (float)(blockchain.get_balance(payer))
+                if payer_balance is None or payer_balance < amount:
+                    return jsonify({"error": "Insufficient balance or invalid password"}), 400
+                # Update wallet balances
+                # update_wallet_balance(payer, payer_balance - amount, password)
+                # update_wallet_balance_internal(payee, get_wallet_balance_internal(payee) + amount)
 
+                # Add transaction to blockchain
+                # transaction = Transaction(amount, payer, payee)
+                # blockchain.add_transaction(transaction)
+                send_coin(amount, payer, payee, blockchain)
+                return jsonify({"message": "Transaction added to pending transactions"})
+            else:
+                return jsonify({"message": "Transaction failed"}), 400
+        else:
+            return jsonify({"message": "invalid password"}), 400
 
 @app.route("/get-mining-data", methods=["GET"])
 def get_mining_data():
     blockchain.miner_active = True
     """API route to provide miners with the latest block data, difficulty, and pending transactions."""
     if not blockchain.pending_transactions:
-        return jsonify({"error": "No pending transactions to mine"}), 400
-    retrived_transaction = blockchain.get_transaction_info().__str__()
+        return jsonify({"Mining": "Waiting for new job allocation"}), 400
     retrived_transaction = blockchain.get_transaction_info().__str__()
 
     latest_block = blockchain.chain[-1]
     mining_data = {
         "prev_hash": latest_block.compute_hash(),
-        "transactions": retrived_transaction,
-        "timestamp": latest_block.timestamp,
         "transactions": retrived_transaction,
         "timestamp": latest_block.timestamp,
         "difficulty": blockchain.difficulty
@@ -116,10 +115,13 @@ def submit_mined_block():
 
     # Validate incoming data structure
     required_fields = ["prev_hash", "transactions", "nonce", "miner_address", "block_hash", "timestamp"]
-    required_fields = ["prev_hash", "transactions", "nonce", "miner_address", "block_hash", "timestamp"]
     if not all(field in data for field in required_fields):
         return jsonify({"error": "Incomplete block data"}), 400
-
+    print("validating miner's wallet address....")
+    if does_wallet_exist(data["miner_address"])==False:
+        print("your wallet address is invalid, close the program now and ensure the address is valid or make a new wallet and try again")
+        return jsonify({"error": "Invalid or unregistered wallet address"}), 400
+    print("miner's wallet address is registered....")
     prev_hash = data["prev_hash"]
     transactions = data["transactions"]
     nonce = data["nonce"]
@@ -128,7 +130,6 @@ def submit_mined_block():
     timestamp = data["timestamp"]
     # Reconstruct the block for validation
     try:
-        new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions], timestamp)
         new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions], timestamp)
     except Exception as e:
         return jsonify({"error": f"Invalid transaction data: {str(e)}"}), 400

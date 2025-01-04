@@ -65,7 +65,7 @@ def get_mining_data(config):
     if response.status_code == 200:
         return response.json()
     else:
-        print("Error fetching mining data:", response.json().get("error"))
+        print("Mining:", response.json().get("Mining"))
         return None
 
 # Compute proof-of-work

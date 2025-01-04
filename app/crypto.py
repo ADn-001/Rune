@@ -85,6 +85,7 @@ class Blockchain:
     BLOCKCHAIN_STORAGE_FILE = "blockchain_storage.json"
     KEY_FILE = "blockchain_key.key"
     miner_active = False
+    internal_miner_working = False
 
     def __init__(self):
             self.chain = []
@@ -241,6 +242,11 @@ class Blockchain:
             block_hash = block.compute_hash()
         return block.nonce
 
+    # def rebuild_transaction(self, amount, payer, payee):
+    #     rebuilt_transaction = Transaction(amount, payer, payee)
+    #     self.add_transaction(rebuilt_transaction)
+    #     print('failed mining job added to the mining queue')
+
     def add_transaction(self, transaction):
         formatted_transaction = format_transactions(transaction)  # Ensure it's a list of Transaction objects
         self.pending_transactions.extend(formatted_transaction)
@@ -262,15 +268,18 @@ class Blockchain:
 
     def internal_mine(self):
         """
-        if there are not active miners connected to the network, the netowrk will validate the transaction using this function
+        if there are not active miners connected to the network, the network will validate the transaction using this function
         """
         print("no miners connected, internal mining operation is being executed")
-        internally_mined_block = Block(self.chain[-1].compute_hash(), format_transactions(self.pending_transactions.pop(0)))
+        self.internal_miner_working = True
+        transaction = format_transactions(self.pending_transactions.pop(0))
+        internally_mined_block = Block(self.chain[-1].compute_hash(), transaction)
         internally_mined_block.nonce = self.proof_of_work(internally_mined_block)
         self.chain.append(internally_mined_block)
 
         self.pending_miner_rewards.clear()
         self.save_blockchain()
+        self.internal_miner_working = False
     def get_transaction_info(self):
         """
         Retrieves the first transaction from the pending_transactions list in FIFO order,
@@ -278,9 +287,8 @@ class Blockchain:
 
         :return: JSON string representation of the transaction if available, otherwise None.
         """
-        if not self.pending_transactions:
-            return None  # Return None if there are no pending transactions
-        
+        if not self.pending_transactions or self.internal_miner_working:
+            return None  # Return None if there are no pending transactions   
         # Get the first transaction
         transaction = self.pending_transactions[0]
         return transaction
@@ -358,7 +366,11 @@ def create_wallet_with_address(password, blockchain=Blockchain):
         "password": hashed_password  # Store hashed password
     }
     save_wallets(wallet_data)  # Save to persistent storage
-    send_coin(10, "Rune_Network", address, blockchain)
+    wallet_Creation_transaction = Transaction(10, "Rune_Network", address)
+    wallet_Creation_block = Block(blockchain.chain[-1].compute_hash(), [wallet_Creation_transaction], time.time())
+    wallet_Creation_block.nonce = blockchain.proof_of_work(wallet_Creation_block)
+    blockchain.chain.append(wallet_Creation_block)
+    blockchain.save_blockchain()
     return address
 
 
@@ -379,12 +391,12 @@ def get_wallet_balance(address, password, blockchain=Blockchain):
         return None  # Return None if the wallet is not found or password is incorrect
 
 def does_wallet_exist(address):
-    """Retrieve only the wallet balance after verifying the password."""
+    """check if wallet is registered"""
     wallet = wallet_data.get(address)
     if wallet:
-        return True # Return the balance directly as a float
+        return True 
     else:
-        return None  # Return None if the wallet is not found or password is incorrect
+        return None  
 
 def send_coin(amount, payer, payee, blockchain=Blockchain):
     transaction = Transaction(amount, payer, payee)
