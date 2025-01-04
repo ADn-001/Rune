@@ -81,7 +81,7 @@ class Block:
         return hashlib.sha256(block_string).hexdigest()
 
 class Blockchain:
-    difficulty = 2
+    difficulty = 0
     BLOCKCHAIN_STORAGE_FILE = "blockchain_storage.json"
     KEY_FILE = "blockchain_key.key"
     miner_active = False
