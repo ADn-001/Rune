@@ -65,7 +65,7 @@ def create_transaction():
     amount = float(request.json.get("amount"))
     password = request.json.get("password")
     if(payer==payee):
-        return jsonify({"message": "you are not allowed to send runes to yourself"}), 400
+        return jsonify({"error": "you are not allowed to send runes to yourself"}), 400
     else:
         if authenticate_wallet(payer, password):
             if (does_wallet_exist(payer) and does_wallet_exist(payee)):
@@ -82,9 +82,9 @@ def create_transaction():
                 send_coin(amount, payer, payee, blockchain)
                 return jsonify({"message": "Transaction added to pending transactions"})
             else:
-                return jsonify({"message": "Transaction failed"}), 400
+                return jsonify({"message": "payee wallet is invalid"})
         else:
-            return jsonify({"message": "invalid password"}), 400
+            return jsonify({"error": "invalid password"}), 400
 
 @app.route("/get-mining-data", methods=["GET"])
 def get_mining_data():
