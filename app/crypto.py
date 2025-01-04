@@ -270,6 +270,7 @@ class Blockchain:
         self.chain.append(internally_mined_block)
 
         self.pending_miner_rewards.clear()
+        self.save_blockchain()
     def get_transaction_info(self):
         """
         Retrieves the first transaction from the pending_transactions list in FIFO order,
