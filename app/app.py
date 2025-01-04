@@ -54,12 +54,8 @@ def get_balance():
             return jsonify({"address": address, "balance": balance})
         else:
             return jsonify({"error": "Invalid address or password"}), 404
-    if (does_wallet_exist(address)):
-        balance = get_wallet_balance(address, password, blockchain)
-        if balance is not None:
-            return jsonify({"address": address, "balance": balance})
-        else:
-            return jsonify({"error": "Invalid address or password"}), 404
+    else:
+        return jsonify({"error": "Invalid address or password"}), 404
 
 
 @app.route("/transaction", methods=["POST"])
