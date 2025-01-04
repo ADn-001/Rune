@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Instantiate Blockchain
 blockchain = Blockchain()
-
+blockchain.miner_active = False
 @app.route('/assets/<path:filename>')
 def serve_assets(filename):
     return send_from_directory('assets', filename)
@@ -20,9 +20,6 @@ def about():
 @app.route("/")
 def home():
     return render_template("index.html")
-
-connected_miners = []
-connected_miners.append("5E7nTmeDUPKYQN48ymXlvC6FX2E=")
 @app.route("/wallet", methods=["POST"])
 def create_wallet_route():
     """API route to create a new wallet."""
@@ -129,9 +126,6 @@ def submit_mined_block():
     miner_address = data["miner_address"]
     block_hash = data["block_hash"]
     timestamp = data["timestamp"]
-    if miner_address not in connected_miners:
-        connected_miners.append(miner_address) #register the miner
-
     # Reconstruct the block for validation
     try:
         new_block = Block(prev_hash, [Transaction(**tx) for tx in transactions], timestamp)
