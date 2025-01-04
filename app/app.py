@@ -95,7 +95,7 @@ def get_mining_data():
     blockchain.miner_active = True
     """API route to provide miners with the latest block data, difficulty, and pending transactions."""
     if not blockchain.pending_transactions:
-        return jsonify({"Mining": "Waiting for new job allocation"}), 400
+        return jsonify({"error": "No pending jobs available. Waiting for new job allocation..."}), 400
     retrived_transaction = blockchain.get_transaction_info().__str__()
 
     latest_block = blockchain.chain[-1]
