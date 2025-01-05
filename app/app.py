@@ -28,7 +28,6 @@ def create_wallet_route():
         return jsonify({"error": "Password is required"}), 400
 
     address = create_wallet_with_address(password, blockchain)
-    address = create_wallet_with_address(password, blockchain)
     if address:
         return jsonify({"message": "Wallet created successfully!", "address": address}), 201
     else:
